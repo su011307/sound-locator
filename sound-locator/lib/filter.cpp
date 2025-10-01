@@ -4,7 +4,7 @@
 
 /*
 * [DISCLAIMER]
-* 在这里使用了Google Gemini，来
+* 在这里使用了Google Gemini，来完善错误处理和构造函数
 * @brief 一个环形缓冲区，用来以常数复杂度写入麦克风读取到的数据
 */
 class CircleBuffer{
@@ -27,6 +27,10 @@ CircleBuffer::CircleBuffer(size_t capacity)
         if (capacity == 0) throw std::invalid_argument("Invalid capacity");
     }
 
+/*
+ * @brief 向环形缓冲区中写入一份数据
+ * @param value `float` 等待写入的数据
+ */
 void CircleBuffer::push(float value){
     buffer_[head_] = value;
     head_ = (head_ + 1) % capacity_;  // 移动head_指针，如果到达末尾，则返回开头，实现事实上的循环
@@ -35,6 +39,11 @@ void CircleBuffer::push(float value){
     }
 }
 
+/*
+ * @brief 获取 `steps` 个间隔之前的数据
+ * @param steps `size_t` 间隔的长度
+ * @returns float 取得的数据
+ */
 float CircleBuffer::get_past(size_t steps) const{
     if (steps >= curr_size_){
         throw std::out_of_range("Request steps out of range");
@@ -44,23 +53,33 @@ float CircleBuffer::get_past(size_t steps) const{
     return buffer_[index];
 }
 
+/*
+ * 检查缓冲区中已经写入的数据数量
+ */
 size_t CircleBuffer::size() const {
     return curr_size_;
 }
 
+/*
+ * 检查缓冲区的最大容量
+ */
 size_t CircleBuffer::capacity() const{
     return capacity_;
 }
 
+/*
+ * 检查缓冲区是否被写满了
+ */
 bool CircleBuffer::is_full() const {
     return curr_size_ == capacity_;
 }
 
 /*
-* @brief ZLEMA是一种滤波器，可以用来从噪声（比如电路底噪）中分离出信号
-* @details ZLEMA是一种在金融时序数据上常见的去噪手段，是EMA的改进型。相比于Kalman，它
-* 通过施加一个相位抵消掉了延迟。这在测定位置的时候可能会更有用，因为延迟可能会导致精度误差
-*/
+ * @brief ZLEMA是一种滤波器，可以用来从噪声（比如电路底噪）中分离出信号
+ * @details ZLEMA是一种在金融时序数据上常见的去噪手段，是EMA的改进型。相比于Kalman，它
+ * 通过施加一个相位抵消掉了延迟。这在测定位置的时候可能会更有用，因为延迟可能会导致精度误差
+ * @details 意欲了解ZLEMA详情，请参阅：https://juejin.cn/post/7485259847471497225
+ */
 class ZLEMAFilter{
 public:
     ZLEMAFilter(size_t period)
@@ -84,6 +103,9 @@ private:
     CircleBuffer history_;
 };
 
+/*
+ * 更新ZLEMA滤波器的值
+ */
 float ZLEMAFilter::update(float value){
     history_.push(value);
     if (!is_ready_){
