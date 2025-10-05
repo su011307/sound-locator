@@ -8,22 +8,8 @@
 #include <cstdint>
 #include <vector>
 #include <stm32f4xx.h>
+#include "abstraction/i2c.hpp"
 
-/*
- * @brief 这是一个I2C通讯数据包的抽象
- * @details I2C的通讯数据包由三部分组成，头部是7位的地址
- * 后面跟着一个字节的控制字节（Control Byte）和若干数据字节
- * 
- * 具体细节请参阅：https://blog.csdn.net/Fine_rose/article/details/114026892
- * @param address `uint8_t` 从机的地址，SSD1306一般是0x78。7位，注意位移1位
- * @param control `uint8_t` 控制字节，SSD1306一般是0x40或者0x00
- * @param data `vector<uint_8>` 需要传输的数据
- */
-struct I2CPackage{
-    uint8_t address;
-    uint8_t control;
-    std::vector<uint8_t> data;
-};
 
 class I2CPort{
     public:

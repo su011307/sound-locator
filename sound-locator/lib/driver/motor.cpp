@@ -4,10 +4,10 @@
  * 
  */
 
-#pragma once
 #include <cstdint>
 #include <array>
 #include <stm32f4xx.h>
+#include "driver/motor.hpp"
 
 constexpr uint8_t GEAR_RATIO = 34;  // 减速比
 constexpr uint16_t PULSES_PER_ROUND = 500;  // 电机每转一圈产生的脉冲数

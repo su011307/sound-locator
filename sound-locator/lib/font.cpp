@@ -3,7 +3,7 @@
 #include <string>
 #include <array>
 
-using Font = std::array<uint8_t, 16>;
+using Font = std::array<uint8_t, 16>;  // 一个字符 8 * 16
 
 const std::unordered_map<char, Font> font_map = {
     {'0', {0x00, 0x00, 0x00, 0x18, 0x24, 0x42, 0x42, 0x42, 0x42, 0x42, 0x42, 0x42, 0x24, 0x18, 0x00, 0x00}},
@@ -21,14 +21,13 @@ const std::unordered_map<char, Font> font_map = {
     {'.', {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x60, 0x60, 0x00, 0x00}}
 };
 
-class Screen{
+class SSD1306{
 public:
-    const uint8_t line_capacity;
-    const uint8_t column_capacity;
-    const uint8_t column_size;
-    bool write_screen(const std::String& str);
+    const uint8_t line_capacity = 16;  // 一行可以存放多少数字，即 128 / 8 = 16
+    const uint8_t column_capacity = 4;  // 一列可以存放多少个数字，即64 / 16 = 4
+    uint8_t column_size;  // 已经使用了多少行
+    bool write_screen();
 private:
-    const uint8_t pin_;
-    void write_()
+    void write_(const uint8_t byte);
 }
 

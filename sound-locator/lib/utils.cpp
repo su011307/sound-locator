@@ -1,75 +1,131 @@
-#include "utils.h"
+/*
+ * [DISCLAIMER] 在重写基础设施的时候，使用Gemini重新梳理了思路
+ * @brief 这个文件提供了在Chan氏反解算、线性卡尔曼滤波中的一些基础
+ */
 
-namespace Utils{
-    float GetDistance(const Point& begin, const Point& end){
-        auto [x1, y1] = begin;
-        auto [x2, y2] = end;
+#include "utils.hpp"
 
-        float dx = x2 - x1;
-        float dy = y2 - y1;
+class Matrix
+{
+public:
+    Matrix(
+        const uint16_t rows,
+        const uint16_t columns,
+        std::optional<std::vector<float>> figure_data = std::nullopt)
+        : rows(rows), columns(columns), figures(rows * columns, 0.0f)
+    {
+        if (figure_data.has_value())
+        {
+            const auto &data = figure_data.value();
 
-        float distanceSquare = dx * dx + dy * dy;
-        float distance;
+            if (data.size() != static_cast<uint32_t>(rows) * columns)
+            {
+                throw std::invalid_argument(
+                    "the size of initial data does not match param \"rows\" and \"columns\"");
+            }
 
-        arm_sqrt_f32(distanceSquare, &distance);  // 这一步可以用硬件加速平方根计算
-        return distance;
+            figures = data;
+        }
     }
 
-    float VectorDot(const Vector& vecA, const Vector& vecB){
-        float dotResult;
-        arm_dot_prod_f32(vecA.data(), vecB.data(), vecB.size(), &dotResult);  // 和GetDistance同理
-        return dotResult;
+    // @brief 重载 + 运算符为矩阵的相加运算
+    Matrix operator+(const Matrix &other) const
+    {
+        if (rows != other.rows || columns != other.columns)
+        {
+            throw std::invalid_argument("can not add two matrixes with different dimensions");
+        }
+
+        Matrix result(rows, columns);
+        arm_matrix_instance_f32 self, other_mat, result_mat;
+        arm_mat_init_f32(&self, rows, columns, const_cast<float *>(figures.data()));
+        arm_mat_init_f32(&other_mat, rows, columns, const_cast<float *>(other.figures.data()));
+        arm_mat_init_f32(&result_mat, rows, columns, result.figures.data());
+
+        if (arm_mat_add_f32(&self, &other_mat, &result_mat) != ARM_MATH_SUCCESS)
+        {
+            throw std::runtime_error("error occurred in adding two matrix");
+        }
+        else
+        {
+            return result;
+        }
     }
 
-    Matrix TransposeMatrix(const Matrix& matrix){
-        Matrix result;
-        arm_matrix_instance_f32 matrixInstance;
-        arm_matrix_instance_f32 resultInstance;
+    // @brief 重载 * 运算符为矩阵的乘法运算
+    Matrix operator*(const Matrix &other) const
+    {
+        if (columns != other.rows)
+        {
+            throw std::invalid_argument("Matrix dimensions are not compatible for multiplication.");
+        }
+        Matrix result(rows, other.columns);
+        arm_matrix_instance_f32 this_inst, other_inst, result_inst;
+        arm_mat_init_f32(&this_inst, rows, columns, const_cast<float *>(figures.data()));
+        arm_mat_init_f32(&other_inst, other.rows, other.columns, const_cast<float *>(other.figures.data()));
+        arm_mat_init_f32(&result_inst, rows, other.columns, result.figures.data());
 
-        arm_mat_init_f32(&matrixInstance, 2, 2, (float32_t*)matrix.data());
-        arm_mat_init_f32(&resultInstance, 2, 2, result.data());
-
-        arm_mat_trans_f32(&matrixInstance, &resultInstance);
-        return result;
+        if (arm_mat_mult_f32(&this_inst, &other_inst, &result_inst) != ARM_MATH_SUCCESS)
+        {
+            throw std::runtime_error("CMSIS-DSP arm_mat_mult_f32 failed.");
+        }
+        else
+        {
+            return result;
+        }
     }
 
-    Matrix InvertMatrix(const Matrix& matrix){
-        Matrix result;
-        
-        arm_matrix_instance_f32 matrixInstance;
-        arm_matrix_instance_f32 resultInstance;
+    const uint16_t rows;
+    const uint16_t columns;
+    std::vector<float> figures; // C样式的扁平化矩阵，以行为单位
+};
 
-        arm_mat_init_f32(&matrixInstance, 2, 2, (float32_t*)matrix.data());
-        arm_mat_init_f32(&resultInstance, 2, 2, result.data());
+// @brief 计算两个点之间的欧几里得距离
+float get_distance(const Point &begin, const Point &end)
+{
+    using namespace std;
+    array<float, 2> begin_array = {begin.first, begin.second};
+    array<float, 2> end_array = {end.first, end.second};
+    float distance = arm_euclidean_distance_f32(begin_array.data(), end_array.data(), 2);
+    return distance;
+}
 
-        arm_mat_inverse_f32(&matrixInstance, &resultInstance);
-        return result;
+// @brief 对一个任意的矩阵求其转置矩阵
+std::optional<Matrix> transpose(const Matrix &matrix)
+{
+    Matrix result(matrix.columns, matrix.rows);
+
+    arm_matrix_instance_f32 raw, result_mat;
+    arm_mat_init_f32(&raw, matrix.rows, matrix.columns, const_cast<float *>(matrix.figures.data()));
+    arm_mat_init_f32(&result_mat, matrix.columns, matrix.rows, result.figures.data());
+
+    if (arm_mat_trans_f32(&raw, &result_mat) != ARM_MATH_SUCCESS)
+    {
+        return std::nullopt;
     }
-
-    Matrix MultiplyMatrix(const Matrix& matA, const Matrix& matB){
-        Matrix result;
-
-        arm_matrix_instance_f32 matAInstance;
-        arm_matrix_instance_f32 matBInstance;
-        arm_matrix_instance_f32 resultInstance;
-
-        arm_mat_init_f32(&matAInstance, 2, 2, (float32_t*)matA.data());
-        arm_mat_init_f32(&matBInstance, 2, 2, (float32_t*)matB.data());
-        arm_mat_init_f32(&resultInstance, 2, 2, result.data());
-
-        arm_mat_mult_f32(&matAInstance, &matBInstance, &resultInstance);
-
-        return result;
-    }
-
-    Vector MultiplyMatrixAndVector(const Matrix& matrix, const Vector& vector){
-        Vector result;
-        result[0] = matrix[0] * vector[0] + matrix[1] * vector[1];
-        result[1] = matrix[2] * vector[0] + matrix[3] * vector[1];
+    else
+    {
         return result;
     }
 }
 
-namespace Filter{
-    
+// @brief 对矩阵求逆
+std::optional<Matrix> inverse(const Matrix &matrix)
+{
+    if (matrix.rows != matrix.columns)
+        return std::nullopt;
+    Matrix result(matrix.rows, matrix.rows);
+
+    arm_matrix_instance_f32 raw, result_mat;
+    arm_mat_init_f32(&raw, matrix.rows, matrix.columns, const_cast<float *>(matrix.figures.data()));
+    arm_mat_init_f32(&result_mat, matrix.columns, matrix.rows, result.figures.data());
+
+    if (arm_mat_inverse_f32(&raw, &result_mat) != ARM_MATH_SUCCESS)
+    {
+        return std::nullopt;
+    }
+    else
+    {
+        return result;
+    }
 }
