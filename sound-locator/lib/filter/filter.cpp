@@ -88,7 +88,7 @@ bool CircleBuffer::is_full() const
 
 /*
  * @brief ZLEMA是一种滤波器，可以用来从噪声（比如电路底噪）中分离出信号
- * @details ZLEMA是一种在金融时序数据上常见的去噪手段，是EMA的改进型。相比于Kalman，它
+ * @details ZLEMA是一种在金融时序数据上常见的去噪手段，是EMA的改进型。相比于EMA，它
  * 通过施加一个相位抵消掉了延迟。这在测定位置的时候可能会更有用，因为延迟可能会导致精度误差
  * @details 意欲了解ZLEMA详情，请参阅：https://juejin.cn/post/7485259847471497225
  */
@@ -117,7 +117,7 @@ private:
 };
 
 /*
- * 更新ZLEMA滤波器的值
+ * @brief 更新ZLEMA滤波器的值
  */
 float ZLEMAFilter::update(float value)
 {
@@ -141,60 +141,62 @@ float ZLEMAFilter::update(float value)
 }
 
 /*
- * [DISCLAIMER]
- * 在学习和实现线性卡尔曼滤波的时候使用了Gemini
- *
- * @brief 适用于麦克风的卡尔曼滤波器
- * @details 金融上很常用，但我从来没有自己实现过一个滤波器
- * 所以在做完整的测试之前，使用这个滤波器的时候应当保持谨慎
- * 它有可能会出现难以察觉的错误
+ * @brief 标量版本的卡尔曼滤波器
+ * @details 鉴于我堪称羸弱的线性代数基础，我决定还是退化到标量吧。
+ * 标量版本的卡尔曼滤波也是足够应付我们的项目的
  */
-class MicKalmanFilter
-{
+class KalmanFilter {
 public:
-    float update(float value)
+    /*
+     * @param p_noise `const float` 过程噪声的方差（或者你们可能看到资料上说协方差，但是在标量下这俩是一回事）
+     * @param m_noise `const float` 测量噪声的方差
+     * @param init_value `const float` 初始值
+     */
+    KalmanFilter(
+        const float p_noise,
+        const float m_noise,
+        const float init_value
+        )
+        : q_(p_noise), r_(m_noise)
     {
-        x_predict_ = predict_state_(&x_best_, &A_);
-        P_ = predict_covariance_(&A_, &Q_, &P_);
-        Matrix H_trans = transpose(H_).value();
-        Matrix S = H_ * P_ * H_trans + R_;
-
-        Matrix K_gain = P_ * H_trans * inverse(S).value();
-
-        Vector predicted_measurement = matrix_vector_multiply(H_, x_predict_).value();
-
-        float residual_y = value - predicted_measurement[0];
-        return 0.0f;
-    };
-    float latest_value() const;
-
-private:
-    Vector x_best_;    // 最优状态
-    Vector x_predict_; // 预测状态
-    Matrix P_;         // 协方差矩阵: 衡量不确定度的大小
-    Matrix A_;         // 状态转移矩阵: 从上一时刻最优状态线性外推到此时刻预测状态
-    Matrix H_;         // 测量矩阵: 将状态空间映射到测量空间
-    Matrix R_;         // 测量噪声协方差矩阵: 衡量传感器本身的不确定度
-    Matrix Q_;         // 过程噪声协方差矩阵:
+        x_best_ = init_value;
+        p_best_ = 1.0f;
+    }
 
     /*
-     * @brief 计算卡尔曼增益矩阵
-     * @details 卡尔曼增益矩阵的值决定系统倾向于采纳预测值或者观测值
-     * 使用指针而不是引用是为了避免多次在栈上分配空间降低性能
-     * @param
+     * @brief 用来更新卡尔曼滤波器
+     * @details 卡尔曼滤波分为两步，先预测，再修正。详情参阅下文注释
      */
-    Matrix kalman_gain_(const Matrix *H, const Matrix *P, const Matrix *R)
-    {
-        return (*P) * transpose((*H)).value() * inverse((*H) * (*P) * transpose((*H)).value() + (*R)).value();
+    float update(const float value) {
+        if (!is_ready_) {
+            x_best_ = value;
+            is_ready_ = true;
+            return x_best_;
+        }
+
+        // 预测步，用上一步的最优不确定度+过程噪声来先验估计当前的不确定度
+        float p_prd = p_best_ + q_;
+        // 计算卡尔曼收益。卡尔曼收益的大小决定了我们倾向于相信预测还是测量
+        // 其实这一步很好定性理解，不确定度和测量噪声，谁的占比越低越倾向于相信谁
+        float k_gain = p_prd / (p_prd + r_);
+        // 使用实际的测量结果来修正先验预测值。卡尔曼增益决定了修正权重
+        // 有点像机器学习中的RL，模型先预测，在根据实际情况修正
+        x_best_ = x_best_ + k_gain * (value - x_best_);
+        p_best_ = (1.0f - k_gain) * p_prd;
+
+        return x_best_;
+    };
+
+    float latest() const {
+        return x_best_;
     }
 
-    Vector predict_state_(const Vector *x_best, const Matrix *A)
-    {
-        return matrix_vector_multiply((*A), (*x_best)).value();
-    }
+private:
+    float x_best_;  // 当前的最优估计
+    float p_best_;  // 当前的不确定度协方差。在金融和工程上，我们通常用方差和协方差来衡量风险、噪声等水平，背后隐含了它们符合正态分布的假设
 
-    Matrix predict_covariance_(const Matrix *A, const Matrix *Q, const Matrix *P)
-    {
-        return (*A) * (*P) * transpose(*A).value() + (*Q);
-    }
+    const float q_;  // 过程噪声协方差。在这个项目中源于物理建模和实际世界的偏差
+    const float r_;  // 测量噪声协方差。在我们的模型中源于电路的底噪
+
+    bool is_ready_ = false;
 };
