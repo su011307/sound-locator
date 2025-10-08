@@ -1,3 +1,4 @@
+#include <cstdint>
 #include "abstraction/driver.hpp"
 
 
@@ -20,19 +21,4 @@ int32_t Timer::count() const {
 
 void Timer::reset(){
     __HAL_TIM_SET_COUNTER(htim_, 0);
-}
-
-
-class Microphone{
-    public:
-        Microphone(ADC_HandleTypeDef* hadc);
-        CircleBuffer buff;
-
-        bool triggered(uint8_t mic_id) const;
-        uint16_t adx_value(uint8_t mic_id) const;
-    private:
-        ADC_HandleTypeDef* hadc_;
-
-        uint16_t adc_buffer_[5];
-
 }

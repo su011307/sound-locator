@@ -1,5 +1,5 @@
 #pragma once
-#include <stm32f4xx_hal.h>
+#include <stm32f4xx.h>
 
 class GPIO{
 public:
@@ -20,15 +20,3 @@ public:
 private:
     TIM_HandleTypeDef* htim_;
 };
-
-class Microphone{
-public:
-    Microphone(ADC_HandleTypeDef* hadc);
-    //CircleBuffer buff;
-    bool triggered(uint8_t mic_id) const;
-    uint16_t adx_value(uint8_t mic_id) const;
-private:
-    ADC_HandleTypeDef* hadc_;
-    uint16_t adc_buffer_[5];
-};
-

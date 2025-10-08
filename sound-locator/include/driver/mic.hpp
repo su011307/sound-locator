@@ -5,18 +5,12 @@
 #include "filter/filter.hpp"
 
 // 麦克风工作模式
-enum class Mode: uint8_t{
-    Single,
-    Continuous,
-    Measure,
-    Random
-};
+enum class Mode;
 
 class Microphone{
 public:
     void update(uint16_t raw_adc, uint32_t timestamp);
     void reset();
-    void change_mode();
 private:
     std::unique_ptr<KalmanFilter> filter_;
     uint32_t adc_channel_;
