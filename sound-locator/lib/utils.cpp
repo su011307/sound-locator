@@ -5,6 +5,11 @@
 
 #include "utils.hpp"
 
+/*
+ * @brief 这个类是矩阵的抽象，实现了常见的加法和乘法运算
+ * @details 对于两个矩阵，可以直接使用“+”和“*”运算符来进行运算，因为这些运算符被“重载”了
+ * 你可以理解为被重新定义了
+ */
 class Matrix
 {
 public:
@@ -18,10 +23,12 @@ public:
         {
             const auto &data = figure_data.value();
 
+            // 检查矩阵数据的数量和大小是否对得上
             if (data.size() != static_cast<uint32_t>(rows) * columns)
             {
                 throw std::invalid_argument(
-                    "the size of initial data does not match param \"rows\" and \"columns\"");
+                    "the size of initial data does not match param \"rows\" and \"columns\""
+                );
             }
 
             figures = data;
@@ -37,11 +44,14 @@ public:
         }
 
         Matrix result(rows, columns);
+
+        // 使用FPU加速的库函数之前，必须先声明几个`arm_matrix_instance_*`，用来存放计算用的数据和结果
         arm_matrix_instance_f32 self, other_mat, result_mat;
         arm_mat_init_f32(&self, rows, columns, const_cast<float *>(figures.data()));
         arm_mat_init_f32(&other_mat, rows, columns, const_cast<float *>(other.figures.data()));
         arm_mat_init_f32(&result_mat, rows, columns, result.figures.data());
 
+        // 判断计算是否成功
         if (arm_mat_add_f32(&self, &other_mat, &result_mat) != ARM_MATH_SUCCESS)
         {
             throw std::runtime_error("error occurred in adding two matrix");
@@ -90,9 +100,14 @@ float get_distance(const Point &begin, const Point &end)
     return distance;
 }
 
-// @brief 对一个任意的矩阵求其转置矩阵
+/*
+ * @brief 对一个任意的矩阵求其转置矩阵
+ * @details std::optional<类型>是一个现代C++的特性，代表这个函数
+ * 可能返回指定类型的变量，也可能不返回
+ */
 std::optional<Matrix> transpose(const Matrix &matrix)
 {
+    // 我承认使用std::optional<T>来自于我用Rust的思维惯性……
     Matrix result(matrix.columns, matrix.rows);
 
     arm_matrix_instance_f32 raw, result_mat;
@@ -101,6 +116,7 @@ std::optional<Matrix> transpose(const Matrix &matrix)
 
     if (arm_mat_trans_f32(&raw, &result_mat) != ARM_MATH_SUCCESS)
     {
+        // `std::nullopt` 表示“没有返回值”
         return std::nullopt;
     }
     else
