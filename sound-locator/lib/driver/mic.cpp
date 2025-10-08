@@ -30,7 +30,7 @@ class Microphone{
               triggered_(false),
               trig_time_(std::nullopt),
               reach_zero_(std::nullopt),
-              last_value_(std::nullopt)
+              last_value_(MEAN)
             {
                 filter_ = std::make_unique<KalmanFilter>();
             }
@@ -59,7 +59,7 @@ class Microphone{
         }
 
     private:
-        std::optional<float> last_value_;
+        float last_value_;
         std::unique_ptr<KalmanFilter> filter_;
         bool triggered_;  // 麦克风是否接收到了声音
         std::optional<uint32_t> trig_time_;  // TDoA模式下，计算首次触发的时间戳
