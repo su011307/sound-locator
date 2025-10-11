@@ -2,6 +2,7 @@
  * 使用TDOA的思路来进行二维定位，使用Chan氏解算算法来还原位置
  */
 #include <cstdint>
+#include <iostream>
 #include "utils.hpp"
 
 constexpr float VOICE_SPEED = 3.43e-2f; // 单位：cm/us
@@ -56,9 +57,8 @@ std::optional<Point> compute_position(
     float K = (x1 - b.figures[0]) * (x1 - b.figures[0]) + (y1 - b.figures[1]) * (y1 - b.figures[1]);
 
     float sqrt_result, temp = J * J - I * K;
-    
-    if (temp < 0)
-    {
+
+    if (temp < 0){
         return std::nullopt;
     }
     arm_sqrt_f32(temp, &sqrt_result);
