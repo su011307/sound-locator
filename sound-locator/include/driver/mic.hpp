@@ -20,14 +20,9 @@ enum class Mode : uint8_t
     Random      // 播放最炫民族风，确定声源位置，单次
 };
 
-struct WaveformSnapshot
-{
-    std::array<float, MIC_NUMBER> filtered;
-    uint32_t timestamp;
-};
-
 class Microphone{
 public:
+    Microphone(uint32_t adc_channel);
     // @brief 用来更新数值，这个数值会经过滤波器过滤
     void update(uint16_t raw_adc, uint32_t timestamp);
     // @brief 重置一个麦克风
@@ -35,8 +30,13 @@ public:
     // @brief 当前的麦克风是否被触发了。这个成员函数只适用于TDoA模式
     bool is_triggered() const;
 private:
-    std::unique_ptr<KalmanFilter> filter_;
+    KalmanFilter filter_;
     uint32_t adc_channel_;
+
+    bool triggered_;
+    std::optional<uint32_t> trig_time_;
+    std::optional<uint32_t> reach_zero_;
+    float last_value_;
 };
 
 /*
@@ -45,6 +45,8 @@ private:
  */
 class MicrophoneMatrix{
 public:
+    MicrophoneMatrix(ADC_HandleTypeDef *hadc,
+                     TIM_HandleTypeDef *timer);
     // @brief 麦克风阵列，启动！
     void start();
     // @bug 如果ADC采样次数过高，CPU来不及处理，缓冲区会不会溢出？
@@ -52,17 +54,19 @@ public:
     void callback();
     // @brief 改变麦克风的工作模式
     void change_mode();
+
+    bool is_ready() const;
+
+    MicrophoneMatrix(const MicrophoneMatrix&) = delete;
+    MicrophoneMatrix& operator=(const MicrophoneMatrix&) = delete;
 private:
     ADC_HandleTypeDef* hadc_;
     TIM_HandleTypeDef* timer_;
-    std::unique_ptr<Microphone> mic0_;
-    std::unique_ptr<Microphone> mic1_;
-    std::unique_ptr<Microphone> mic2_;
-    std::unique_ptr<Microphone> mic3_;
-    std::array<uint32_t, 4> buffer_;
+    std::array<Microphone, MIC_NUMBER> microphones_;
+    std::array<uint32_t, MIC_NUMBER> buffer_;
     Mode mode_;
     bool is_ready_;
     // @details 这个成员函数只在TDoA的模式下可用
-    void check_is_ready();
+    void check_if_ready();
 };
 

@@ -1,6 +1,15 @@
-#include <cstdint>
 #include "abstraction/driver.hpp"
 
+GPIO::GPIO(GPIO_TypeDef *port, uint16_t pin)
+    : port_(port), pin_(pin){ }
+
+void GPIO::set_high(){
+    HAL_GPIO_WritePin(port_, pin_, GPIO_PIN_SET);
+}
+
+void GPIO::set_low(){
+    HAL_GPIO_WritePin(port_, pin_, GPIO_PIN_RESET);
+}
 
 class Timer{
     public:

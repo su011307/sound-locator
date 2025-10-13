@@ -1,10 +1,5 @@
 #include "driver/motor.hpp"
 
-constexpr uint8_t GEAR_RATIO = 34;         // 减速比
-constexpr uint16_t PULSES_PER_ROUND = 500; // 电机每转一圈产生的脉冲数
-constexpr uint16_t DELTA = 100;            // 时间间隔，单位：us
-constexpr uint32_t MAX_PWM = 99;           // PWM的最大值
-
 Encoder::Encoder(TIM_HandleTypeDef *htim, uint16_t delta_t)
     : htim_(htim),
       delta_t_(delta_t)
@@ -37,7 +32,10 @@ Motor::Motor(
           encoder_(encoder),
           target_angle_(0.0f), 
           current_impulse_(0), 
-          param_(param)
+          param_(param),
+          gear_ratio_(GEAR_RATIO),
+          pulses_per_round_(PULSES_PER_ROUND),
+          delta_(DELTA)
     {
         stop();
     }
@@ -116,9 +114,9 @@ float Motor::pid_update()
 
     // DELTA的单位是微秒，转换为秒
     // * 1.0是常用的技巧，用来隐式转换类型，因为static_cast<T>(var)写起来太麻烦
-    (param_ -> intergral) += err * ((delta * 1.0) / (1e6 * 1.0));
+    (param_ -> intergral) += err * ((delta_ * 1.0) / (1e6 * 1.0));
 
-    float derivative = (err - prev_err) / (delta * 1.0 / (1e6 * 1.0));
+    float derivative = (err - prev_err) / (delta_ * 1.0 / (1e6 * 1.0));
     float output = (param_ -> Kp) * err + (param_ -> Ki) * (param_ -> intergral) + (param_ -> Kd) * derivative;
 
     return output;  // 这个output用来通过PWM控制电机，其值应当落在[0, 100]以内

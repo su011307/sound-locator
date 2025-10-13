@@ -1,4 +1,6 @@
 #pragma once
+
+#include <cstdint>
 #include <stm32f4xx.h>
 
 class GPIO{
@@ -6,7 +8,6 @@ public:
     GPIO(GPIO_TypeDef *port, uint16_t pin);
     void set_high();
     void set_low();
-    void reverse();
 private:
     GPIO_TypeDef* port_;
     uint16_t pin_;
