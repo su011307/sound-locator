@@ -57,6 +57,8 @@ public:
 
     bool is_ready() const;
 
+    Mode get_mode() const;
+
     MicrophoneMatrix(const MicrophoneMatrix&) = delete;
     MicrophoneMatrix& operator=(const MicrophoneMatrix&) = delete;
 private:

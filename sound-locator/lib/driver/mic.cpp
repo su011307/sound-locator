@@ -86,3 +86,7 @@ void MicrophoneMatrix::check_if_ready()
         is_ready_ = true;
     }
 }
+
+Mode MicrophoneMatrix::get_mode() const {
+    return mode_;
+}
