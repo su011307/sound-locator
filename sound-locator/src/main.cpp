@@ -28,7 +28,7 @@ void __Enable_Clocks()
     __HAL_RCC_GPIOB_CLK_ENABLE();
     __HAL_RCC_GPIOC_CLK_ENABLE();
     __HAL_RCC_ADC1_CLK_ENABLE();
-    __HAL_RCC_DMA1_CLK_ENABLE();
+    __HAL_RCC_DMA2_CLK_ENABLE();
     __HAL_RCC_TIM2_CLK_ENABLE();
     __HAL_RCC_TIM3_CLK_ENABLE();
     __HAL_RCC_TIM4_CLK_ENABLE();
@@ -285,7 +285,7 @@ Motor *__Init_Motor(
 int main(){
     // 全局初始化
     HAL_Init();
-    // SystemClock_Config();
+    __System_Clock_Config();
     __Enable_Clocks();
 
     // 模块初始化
@@ -311,22 +311,48 @@ int main(){
 
     leds->init();
     oled->clear();
-    oled->draw_string(0, 0, "Rdy");
+    oled->write("42");
     oled->refresh();
     g_mic_matrix->start();
 
     // 麦克风的物理位置，单位：cm
     const std::array<Point, MIC_NUMBER> mic_locations = {{
-        {}
+        {4.75, 4.75}, {4.75, -4.75},
+        {-4.75, 4.75}, {-4.75, -4.75}
     }};
 
     while(1){
-        Mode curr_mode = mic_matrix->get_mode();
+        Mode curr_mode = g_mic_matrix->get_mode();
 
         switch (curr_mode){
             case Mode::Single:
             case Mode::Random:
             {
+                if (g_mic_matrix->is_ready())
+                {
+                    oled->clear();
+                    oled->write("...");
+                    oled->refresh();
+                    auto timestamps = g_mic_matrix->get_timestamps();
+                    std::optional<Point> position = compute_position(mic_locations, timestamps);
+
+                    if (position.has_value())
+                    {
+                        auto [x, y] = *position;
+
+                        float angle = std::atan2(y, x) * 180.0f / 3.1415927f;
+                        if (angle < 0){
+                            angle += 360.0f;
+                        }
+
+                        motor->abs_update(angle);
+                        leds->light_up(static_cast<uint16_t>(angle * 10.0f));
+                    }
+                    else
+                    {
+
+                    }
+                }
                 break;
             }
 
@@ -347,10 +373,9 @@ int main(){
     return 0;
 }
 
-// @warning 还剩一个回调函数没有搞定
-
-void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc, ADC_TypeDef* ADC_INSTANCE){
-    if (hadc->Instance == ADC_INSTANCE){
+// @remark 回调函数不支持传入其它参数，如果需要修改，要把这里也改了
+void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc){
+    if (hadc->Instance == ADC1){
         if (g_mic_matrix != nullptr){
             g_mic_matrix->callback();
         }

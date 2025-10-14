@@ -49,6 +49,7 @@ public:
                      TIM_HandleTypeDef *timer);
     // @brief 麦克风阵列，启动！
     void start();
+
     // @bug 如果ADC采样次数过高，CPU来不及处理，缓冲区会不会溢出？
     // @brief 回调函数，供中断触发后调用
     void callback();
@@ -58,6 +59,8 @@ public:
     bool is_ready() const;
 
     Mode get_mode() const;
+
+    const std::array<uint32_t, MIC_NUMBER> &get_timestamps() const;
 
     MicrophoneMatrix(const MicrophoneMatrix&) = delete;
     MicrophoneMatrix& operator=(const MicrophoneMatrix&) = delete;

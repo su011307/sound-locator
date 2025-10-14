@@ -90,3 +90,7 @@ void MicrophoneMatrix::check_if_ready()
 Mode MicrophoneMatrix::get_mode() const {
     return mode_;
 }
+
+const std::array<uint32_t, MIC_NUMBER>& MicrophoneMatrix::get_timestamps() const{
+    return buffer_;
+}

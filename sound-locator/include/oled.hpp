@@ -18,6 +18,12 @@ public:
 
     OLED(I2CPort &i2c_port);
     bool init();
+
+    /*
+     * @brief 向屏幕中写入内容
+     * @return `bool` 是否写入成功
+     */
+    bool write(const std::string& content);
     void clear();
     bool refresh();
 private:
