@@ -2,8 +2,8 @@
  * @brief 这个文件提供了OLED的抽象，用来操作显示屏
  * [DISCLAIMER] 在AI代码的基础上自己写的，不然根本不知道Qwen在写什么，心里不踏实
  */
-#include "driver/oled.hpp"
-#include "abstraction/i2c.hpp"
+#include "oled.hpp"
+#include "i2c.hpp"
 #include <cstring>
 #include <algorithm>
 #include <array>

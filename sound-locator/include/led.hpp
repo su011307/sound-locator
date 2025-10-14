@@ -2,7 +2,7 @@
 
 #include <cstdint>
 #include <array>
-#include <abstraction/driver.hpp>
+#include "driver.hpp"
 
 class LEDMatrix
 {

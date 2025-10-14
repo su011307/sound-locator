@@ -1,12 +1,12 @@
 #include "tdoa.hpp"
 #include "utils.hpp"
-#include "abstraction/driver.hpp"
-#include "abstraction/i2c.hpp"
+#include "driver.hpp"
+#include "i2c.hpp"
 
-#include "driver/motor.hpp"
-#include "driver/led.hpp"
-#include "driver/mic.hpp"
-#include "driver/oled.hpp"
+#include "motor.hpp"
+#include "led.hpp"
+#include "mic.hpp"
+#include "oled.hpp"
 
 // @warning 对于ADC通道的采样延迟，务必查阅手册并予以补偿
 // 暂时不清楚ADC通道切换所占用的时钟周期。不过可以肯定这个时长是固定、可预测的
@@ -20,6 +20,8 @@ TIM_HandleTypeDef htim_encoder;
 I2C_HandleTypeDef hi2c1;
 
 MicrophoneMatrix *g_mic_matrix = nullptr;
+
+void __System_Clock_Config();
 
 // @brief 初始化外设所需要的时钟
 void __Enable_Clocks()

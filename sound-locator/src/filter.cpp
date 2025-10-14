@@ -2,6 +2,7 @@
 #include <vector>
 #include <stdexcept>
 #include "utils.hpp"
+#include "filter.hpp"
 
 /*
  * [DISCLAIMER]
@@ -29,7 +30,9 @@ CircleBuffer::CircleBuffer(size_t capacity)
     : buffer_(capacity), capacity_(capacity)
 {
     if (capacity == 0)
-        throw std::invalid_argument("Invalid capacity");
+    {
+        // Error_Handler();
+    }
 }
 
 /*
@@ -55,7 +58,7 @@ float CircleBuffer::get_past(size_t steps) const
 {
     if (steps >= curr_size_)
     {
-        throw std::out_of_range("Request steps out of range");
+        // Error_Handler();
     }
     size_t index = (head_ + capacity_ - 1 - steps) % capacity_;
 
@@ -140,63 +143,39 @@ float ZLEMAFilter::update(float value)
     return curr_zlema;
 }
 
-/*
- * @brief 标量版本的卡尔曼滤波器
- * @details 鉴于我堪称羸弱的线性代数基础，我决定还是退化到标量吧。
- * 标量版本的卡尔曼滤波也是足够应付我们的项目的
- */
-class KalmanFilter {
-public:
-    /*
-     * @param p_noise `const float` 过程噪声的方差（或者你们可能看到资料上说协方差，但是在标量下这俩是一回事）
-     * @param m_noise `const float` 测量噪声的方差
-     * @param init_value `const float` 初始值
-     */
-    KalmanFilter(
-        const float p_noise,
-        const float m_noise,
-        const float init_value
-        )
-        : q_(p_noise), r_(m_noise)
+KalmanFilter::KalmanFilter( // 报错：此声明没有存储类或类型说明符C/C++(77)
+    const float p_noise,
+    const float m_noise,
+    const float init_value)
+    : q_(p_noise), r_(m_noise)
+{
+    x_best_ = init_value;
+    p_best_ = 1.0f;
+}
+
+float KalmanFilter::update(const float value)
+{
+    if (!is_ready_)
     {
-        x_best_ = init_value;
-        p_best_ = 1.0f;
-    }
-
-    /*
-     * @brief 用来更新卡尔曼滤波器
-     * @details 卡尔曼滤波分为两步，先预测，再修正。详情参阅下文注释
-     */
-    float update(const float value) {
-        if (!is_ready_) {
-            x_best_ = value;
-            is_ready_ = true;
-            return x_best_;
-        }
-
-        // 预测步，用上一步的最优不确定度+过程噪声来先验估计当前的不确定度
-        float p_prd = p_best_ + q_;
-        // 计算卡尔曼收益。卡尔曼收益的大小决定了我们倾向于相信预测还是测量
-        // 其实这一步很好定性理解，不确定度和测量噪声，谁的占比越低越倾向于相信谁
-        float k_gain = p_prd / (p_prd + r_);
-        // 使用实际的测量结果来修正先验预测值。卡尔曼增益决定了修正权重
-        // 有点像机器学习中的RL，模型先预测，在根据实际情况修正
-        x_best_ = x_best_ + k_gain * (value - x_best_);
-        p_best_ = (1.0f - k_gain) * p_prd;
-
-        return x_best_;
-    };
-
-    float latest() const {
+        x_best_ = value;
+        is_ready_ = true;
         return x_best_;
     }
 
-private:
-    float x_best_;  // 当前的最优估计
-    float p_best_;  // 当前的不确定度协方差。在金融和工程上，我们通常用方差和协方差来衡量风险、噪声等水平，背后隐含了它们符合正态分布的假设
+    // 预测步，用上一步的最优不确定度+过程噪声来先验估计当前的不确定度
+    float p_prd = p_best_ + q_;
+    // 计算卡尔曼收益。卡尔曼收益的大小决定了我们倾向于相信预测还是测量
+    // 其实这一步很好定性理解，不确定度和测量噪声，谁的占比越低越倾向于相信谁
+    float k_gain = p_prd / (p_prd + r_);
+    // 使用实际的测量结果来修正先验预测值。卡尔曼增益决定了修正权重
+    // 有点像机器学习中的RL，模型先预测，在根据实际情况修正
+    x_best_ = x_best_ + k_gain * (value - x_best_);
+    p_best_ = (1.0f - k_gain) * p_prd;
 
-    const float q_;  // 过程噪声协方差。在这个项目中源于物理建模和实际世界的偏差
-    const float r_;  // 测量噪声协方差。在我们的模型中源于电路的底噪
+    return x_best_;
+}
 
-    bool is_ready_ = false;
-};
+float KalmanFilter::latest() const
+{
+    return x_best_;
+}

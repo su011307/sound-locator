@@ -1,4 +1,4 @@
-#include "driver/led.hpp"
+#include "led.hpp"
 
 LEDMatrix::LEDMatrix(GPIO *a0, GPIO *a1, GPIO *a2, GPIO *e1)
     : a0_(a0), a1_(a1), a2_(a2), e1_(e1){ }

@@ -1,4 +1,4 @@
-#include "driver/mic.hpp"
+#include "mic.hpp"
 
 Microphone::Microphone(uint32_t adc_channel)
     : adc_channel_(adc_channel),

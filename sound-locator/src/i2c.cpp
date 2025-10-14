@@ -8,49 +8,43 @@
 #include <cstdint>
 #include <vector>
 #include <stm32f4xx.h>
-#include "abstraction/i2c.hpp"
+#include "i2c.hpp"
 
+I2CPort::I2CPort(I2C_HandleTypeDef* hi2c)
+    : hi2c_(hi2c){ }
 
-class I2CPort{
-    public:
-        I2CPort(I2C_HandleTypeDef* hi2c);
+bool I2CPort::write_command(uint8_t address, const std::vector<uint8_t> &commands){
+    std::vector<uint8_t> buffer;
+    buffer.reserve(1 + commands.size());
+    buffer.push_back(0x00);
+    buffer.insert(buffer.end(), commands.begin(), commands.end());
+    bool is_ok = HAL_I2C_Master_Transmit(
+                    hi2c_,
+                    address,
+                    buffer.data(),
+                    buffer.size(),
+                    timeout) == HAL_OK;
 
-        // @brief 向从机发送指令
-        bool write_command(uint8_t address, const std::vector<uint8_t>& commands){
-            std::vector<uint8_t> buffer;
-            buffer.reserve(1 + commands.size());
-            buffer.push_back(0x00);
-            buffer.insert(buffer.end(), commands.begin(), commands.end());
-            bool is_ok = HAL_I2C_Master_Transmit(
-                hi2c_, 
-                address, 
-                buffer.data(), 
-                buffer.size(), 
-                timeout
-            ) == HAL_OK;
+    return is_ok;
+}
 
-            return is_ok;
-        }
+bool I2CPort::write_data(uint8_t address, const std::vector<uint8_t> &datas)
+{
+    if (datas.empty())
+        return true;
+    std::vector<uint8_t> buffer;
+    buffer.reserve(1 + datas.size());
+    buffer.push_back(0x40);
+    buffer.insert(buffer.end(), datas.begin(), datas.end());
+    bool is_ok = HAL_I2C_Master_Transmit(
+                    hi2c_,
+                    address,
+                    buffer.data(),
+                    buffer.size(),
+                    timeout) == HAL_OK;
 
-        // @brief 向从机发送数据包
-        bool write_data(uint8_t address, const std::vector<uint8_t>& datas){
-            if (datas.empty()) return true;
-            std::vector<uint8_t> buffer;
-            buffer.reserve(1 + datas.size());
-            buffer.push_back(0x40);
-            buffer.insert(buffer.end(), datas.begin(), datas.end());
-            bool is_ok = HAL_I2C_Master_Transmit(
-                hi2c_,
-                address,
-                buffer.data(),
-                buffer.size(),
-                timeout
-            ) == HAL_OK;
-
-            return is_ok;
-        };
-    private:
-        I2C_HandleTypeDef* hi2c_;
-        uint8_t address_;
-        static constexpr uint32_t timeout = 500;
+    return is_ok;
 };
+
+
+

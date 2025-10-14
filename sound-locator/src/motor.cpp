@@ -1,4 +1,4 @@
-#include "driver/motor.hpp"
+#include "motor.hpp"
 
 Encoder::Encoder(TIM_HandleTypeDef *htim, uint16_t delta_t)
     : htim_(htim),

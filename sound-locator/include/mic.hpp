@@ -4,7 +4,7 @@
 #include <memory>
 #include <array>
 #include <stm32f4xx.h>
-#include "filter/filter.hpp"
+#include "filter.hpp"
 
 constexpr uint8_t MIC_NUMBER = 4;
 constexpr uint16_t FREQUENCY = 1000;
