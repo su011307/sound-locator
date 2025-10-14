@@ -1,3 +1,8 @@
+/*
+ * 这个文件实现的是麦克风的抽象
+ * 需要注意，一个完整的麦克风定位流程并没有完成
+ */
+
 #include "mic.hpp"
 
 Microphone::Microphone(uint32_t adc_channel)
@@ -75,14 +80,17 @@ bool MicrophoneMatrix::is_ready() const
 void MicrophoneMatrix::check_if_ready()
 {
     if (mode_ == Mode::Single || mode_ == Mode::Random){
+        // @bug 这里的逻辑是有问题的，Single和Random模式下永远也没办法进入is_ready_状态
         if (is_ready_) return;
     }
 
     uint8_t count = 0;
+
     for (const auto& mic : microphones_){
         if (mic.is_triggered()) count ++;
     }
-    if (count >= 3) {
+    if (count == 4) {
+        // 强制当4个麦克风均准备就绪时才is_ready。这是为了避免精度降低
         is_ready_ = true;
     }
 }

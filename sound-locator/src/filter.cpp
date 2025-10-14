@@ -4,28 +4,6 @@
 #include "utils.hpp"
 #include "filter.hpp"
 
-/*
- * [DISCLAIMER]
- * 在这里使用了Google Gemini，来完善错误处理和构造函数
- * @brief 一个环形缓冲区，用来以常数复杂度写入麦克风读取到的数据
- */
-class CircleBuffer
-{
-public:
-    explicit CircleBuffer(size_t capacity);
-    void push(float value);
-    float get_past(size_t steps) const;
-    size_t size() const;
-    size_t capacity() const;
-    bool is_full() const;
-
-private:
-    std::vector<float> buffer_;
-    size_t head_ = 0;
-    size_t curr_size_ = 0;
-    const size_t capacity_;
-};
-
 CircleBuffer::CircleBuffer(size_t capacity)
     : buffer_(capacity), capacity_(capacity)
 {
@@ -35,10 +13,6 @@ CircleBuffer::CircleBuffer(size_t capacity)
     }
 }
 
-/*
- * @brief 向环形缓冲区中写入一份数据
- * @param value `float` 等待写入的数据
- */
 void CircleBuffer::push(float value)
 {
     buffer_[head_] = value;
@@ -49,11 +23,6 @@ void CircleBuffer::push(float value)
     }
 }
 
-/*
- * @brief 获取 `steps` 个间隔之前的数据
- * @param steps `size_t` 间隔的长度
- * @returns float 取得的数据
- */
 float CircleBuffer::get_past(size_t steps) const
 {
     if (steps >= curr_size_)
@@ -65,63 +34,31 @@ float CircleBuffer::get_past(size_t steps) const
     return buffer_[index];
 }
 
-/*
- * 检查缓冲区中已经写入的数据数量
- */
 size_t CircleBuffer::size() const
 {
     return curr_size_;
 }
 
-/*
- * 检查缓冲区的最大容量
- */
 size_t CircleBuffer::capacity() const
 {
     return capacity_;
 }
 
-/*
- * 检查缓冲区是否被写满了
- */
 bool CircleBuffer::is_full() const
 {
     return curr_size_ == capacity_;
 }
 
-/*
- * @brief ZLEMA是一种滤波器，可以用来从噪声（比如电路底噪）中分离出信号
- * @details ZLEMA是一种在金融时序数据上常见的去噪手段，是EMA的改进型。相比于EMA，它
- * 通过施加一个相位抵消掉了延迟。这在测定位置的时候可能会更有用，因为延迟可能会导致精度误差
- * @details 意欲了解ZLEMA详情，请参阅：https://juejin.cn/post/7485259847471497225
- */
-class ZLEMAFilter
+ZLEMAFilter::ZLEMAFilter(size_t period)
+    : period_(period),
+        lag_((period - 1) / 2),
+        alpha_(2.0f / (period + 1.0f)),
+        history_(lag_ + 1)
 {
-public:
-    ZLEMAFilter(size_t period)
-        : period_(period),
-          lag_((period - 1) / 2),
-          alpha_(2.0f / (period + 1.0f)),
-          history_(lag_ + 1)
-    {
-        is_ready_ = false;
-        prev_zlema_ = 0.0f;
-    }
+    is_ready_ = false;
+    prev_zlema_ = 0.0f;
+}
 
-    float update(float value);
-
-private:
-    size_t period_;
-    size_t lag_;
-    float alpha_;
-    float prev_zlema_;
-    bool is_ready_;
-    CircleBuffer history_;
-};
-
-/*
- * @brief 更新ZLEMA滤波器的值
- */
 float ZLEMAFilter::update(float value)
 {
     history_.push(value);
@@ -143,7 +80,7 @@ float ZLEMAFilter::update(float value)
     return curr_zlema;
 }
 
-KalmanFilter::KalmanFilter( // 报错：此声明没有存储类或类型说明符C/C++(77)
+KalmanFilter::KalmanFilter(
     const float p_noise,
     const float m_noise,
     const float init_value)

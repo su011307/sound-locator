@@ -5,13 +5,36 @@
 #include <stdexcept>
 #include "utils.hpp"
 
+/*
+ * [DISCLAIMER]
+ * 在这里使用了Google Gemini，来完善错误处理和构造函数
+ * @brief 一个环形缓冲区，用来以常数复杂度写入麦克风读取到的数据
+ */
 class CircleBuffer{
     public:
         explicit CircleBuffer(size_t capacity);
+        /*
+         * @brief 向环形缓冲区中写入一份数据
+         * @param value `float` 等待写入的数据
+         */
         void push(float value);
+        /*
+         * @brief 获取 `steps` 个间隔之前的数据
+         * @param steps `size_t` 间隔的长度
+         * @returns float 取得的数据
+         */
         float get_past(size_t steps) const;
+        /*
+         * 检查缓冲区中已经写入的数据数量
+         */
         size_t size() const;
+        /*
+         * 检查缓冲区的最大容量
+         */
         size_t capacity() const;
+        /*
+         * 检查缓冲区是否被写满了
+         */
         bool is_full() const;
 
     private:
@@ -21,10 +44,18 @@ class CircleBuffer{
         const size_t capacity_;
 };
 
+/*
+ * @brief ZLEMA是一种滤波器，可以用来从噪声（比如电路底噪）中分离出信号
+ * @details ZLEMA是一种在金融时序数据上常见的去噪手段，是EMA的改进型。相比于EMA，它
+ * 通过施加一个相位抵消掉了延迟。这在测定位置的时候可能会更有用，因为延迟可能会导致精度误差
+ * @details 意欲了解ZLEMA详情，请参阅：https://juejin.cn/post/7485259847471497225
+ */
 class ZLEMAFilter{
     public:
         ZLEMAFilter(size_t period);
-
+        /*
+         * @brief 更新ZLEMA滤波器的值
+         */
         float update(float value);
 
     private:

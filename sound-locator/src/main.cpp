@@ -1,3 +1,5 @@
+#include <cmath>
+
 #include "tdoa.hpp"
 #include "utils.hpp"
 #include "driver.hpp"
@@ -342,7 +344,7 @@ int main(){
                     {
                         auto [x, y] = *position;
 
-                        float angle = std::atan2(y, x) * 180.0f / 3.1415927f;
+                        float angle = atan(y/x) * 180.0f / 3.1415927f;
                         if (angle < 0){
                             angle += 360.0f;
                         }

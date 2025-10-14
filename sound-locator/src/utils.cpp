@@ -17,8 +17,7 @@ Matrix::Matrix(
         // 检查矩阵数据的数量和大小是否对得上
         if (data.size() != static_cast<uint32_t>(rows) * columns)
         {
-            throw std::invalid_argument(
-                "the size of initial data does not match param \"rows\" and \"columns\"");
+            // Error_Handler();
         }
 
         figures = data;
@@ -30,7 +29,7 @@ Matrix Matrix::operator+(const Matrix &other) const
 {
     if (rows != other.rows || columns != other.columns)
     {
-        throw std::invalid_argument("can not add two matrixes with different dimensions");
+        // Error_Handler();
     }
 
     Matrix result(rows, columns);
@@ -44,7 +43,7 @@ Matrix Matrix::operator+(const Matrix &other) const
     // 判断计算是否成功
     if (arm_mat_add_f32(&self, &other_mat, &result_mat) != ARM_MATH_SUCCESS)
     {
-        throw std::runtime_error("error occurred in adding two matrix");
+        // Error_Handler();
     }
     else
     {
@@ -57,7 +56,7 @@ Matrix Matrix::operator*(const Matrix &other) const
 {
     if (columns != other.rows)
     {
-        throw std::invalid_argument("Matrix dimensions are not compatible for multiplication.");
+        // Error_Handler();
     }
     Matrix result(rows, other.columns);
     arm_matrix_instance_f32 this_inst, other_inst, result_inst;
@@ -67,7 +66,7 @@ Matrix Matrix::operator*(const Matrix &other) const
 
     if (arm_mat_mult_f32(&this_inst, &other_inst, &result_inst) != ARM_MATH_SUCCESS)
     {
-        throw std::runtime_error("CMSIS-DSP arm_mat_mult_f32 failed.");
+        // Error_Handler();
     }
     else
     {
