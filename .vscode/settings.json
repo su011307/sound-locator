@@ -1,0 +1,10 @@
+{
+    "files.associations": {
+        "*.go": "go",
+        "adc.h": "c",
+        "main.h": "c",
+        "i2c.h": "c",
+        "gpio.h": "c",
+        "array": "cpp"
+    }
+}
