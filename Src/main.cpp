@@ -32,6 +32,7 @@
 #include "OLED_Font.h"
 #include "mic.hpp"
 #include "tdoa.hpp"
+#include "usart.hpp"
 #include <cmath>
 /* USER CODE END Includes */
 
@@ -64,6 +65,7 @@ constexpr std::array<Point, 4> MIC_LOCATIONS =
 MicrophoneMatrix *g_mic_matrix = nullptr;
 Motor *g_motor = nullptr;
 LEDMatrix *g_led_matrix = nullptr;
+Transmitter *g_trans = nullptr;
 // OLED *g_oled = nullptr;
 /* USER CODE END PV */
 
@@ -105,7 +107,10 @@ int main(void) {
     HAL_Init();
 
     /* USER CODE BEGIN Init */
-
+    // DBGMCU->APB1FZ |= DBGMCU_APB1_FZ_DBG_TIM3_STOP;
+    // DBGMCU->APB2FZ |= DBGMCU_APB2_FZ_DBG_TIM9_STOP
+    //                 | DBGMCU_APB2_FZ_DBG_TIM10_STOP
+    //                 | DBGMCU_APB2_FZ_DBG_TIM11_STOP;
     /* USER CODE END Init */
 
     /* Configure the system clock */
@@ -145,6 +150,7 @@ int main(void) {
 
     g_motor = new Motor(&htim2, TIM_CHANNEL_2, g_enc_gpio_1, g_enc_gpio_2, g_encoder, g_pid_param);
     g_led_matrix = new LEDMatrix(g_led_gpio_1, g_led_gpio_2, g_led_gpio_3);
+    g_trans = new Transmitter(&huart6);
 
     HAL_Delay(100);
     OLED_Init();
@@ -159,12 +165,16 @@ int main(void) {
     HAL_TIM_Base_Start_IT(&htim11);  // 定期调整电机
 
     /* USER CODE END 2 */
-
+    HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0, GPIO_PIN_SET);
+    __HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_2, 1998);
+    HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_2);
     /* Infinite loop */
     /* USER CODE BEGIN WHILE */
     while (1) {
         /* USER CODE END WHILE */
-        HAL_Delay(1);
+
+
+        HAL_Delay(10);
         /* USER CODE BEGIN 3 */
     }
     /* USER CODE END 3 */
@@ -223,7 +233,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
         // 然后换用了uint16_t，应该是能正确处理回绕问题的
     } else if (htim->Instance == TIM11) {
         // 更新PID响应
-        g_motor->poll();
+        // g_motor->poll();
     }
 }
 
@@ -243,6 +253,7 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc) {
 
                     // 计算角度
                     auto angle = atan2(loc.value().second, loc.value().first) * 57.29578; // 换算成度
+
                     g_motor->move_to(angle);
                 } else {
                     // g_oled->write("?");

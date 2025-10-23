@@ -60,9 +60,11 @@ void Error_Handler(void);
 #include "mic.hpp"
 #include "motor.hpp"
 #include "led.hpp"
+#include "usart.hpp"
 #include "OLED.h"
 
 extern MicrophoneMatrix *g_mic_matrix;
 extern Motor *g_motor;
 extern LEDMatrix *g_led_matrix;
+extern Transmitter *g_trans;
 // extern OLED *g_oled;
