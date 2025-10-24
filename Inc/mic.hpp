@@ -9,7 +9,7 @@
 
 constexpr uint32_t ADC_SAMPLING_SPAN = 1000; // 麦克风矩阵ADC采样的间隔，单位：us
 constexpr uint8_t FILTER_PERIOD = 14;        // ZLEMA的周期
-constexpr uint32_t TRIGGER_THRESH = 3096;    // 触发阈值
+constexpr uint32_t TRIGGER_THRESH = 1024;    // 触发阈值
 constexpr uint32_t BUFFER = 24; // 留一个中间地带，防止去噪不彻底的抖动
 constexpr uint32_t WINDOW = 600; 
 constexpr uint32_t GUARANTEE = 800;
@@ -32,7 +32,7 @@ public:
     bool is_ok() const;
     void switch_mode();
     void update(uint32_t timestamp);
-    std::array<uint32_t, 4> get_timestamps();
+    std::array<uint32_t, 4> get_timestamps() const;
 
 private:
     WorkingMode mode_ = WorkingMode::Single;

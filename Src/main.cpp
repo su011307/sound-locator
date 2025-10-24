@@ -109,8 +109,8 @@ int main(void) {
     /* USER CODE BEGIN Init */
     DBGMCU->APB1FZ |= DBGMCU_APB1_FZ_DBG_TIM3_STOP;
     DBGMCU->APB2FZ |= DBGMCU_APB2_FZ_DBG_TIM9_STOP
-                    | DBGMCU_APB2_FZ_DBG_TIM10_STOP
-                    | DBGMCU_APB2_FZ_DBG_TIM11_STOP;
+                    | DBGMCU_APB2_FZ_DBG_TIM10_STOP;
+                    // | DBGMCU_APB2_FZ_DBG_TIM11_STOP;
     /* USER CODE END Init */
 
     /* Configure the system clock */
@@ -160,12 +160,12 @@ int main(void) {
 
     HAL_ADC_Start_DMA(&hadc1, g_mic_matrix->dma_ptr(), 4);
     // 在这里启动几个时钟
-    HAL_TIM_Base_Start_IT(&htim9);  // 定期读取编码器度数
+    // HAL_TIM_Base_Start_IT(&htim9);  // 定期读取编码器度数
     HAL_TIM_Base_Start_IT(&htim10);  // 定期触发ADC
     HAL_TIM_Base_Start_IT(&htim11);  // 定期调整电机
 
     /* USER CODE END 2 */
-
+    // g_motor->move_to(180);
     /* Infinite loop */
     // int i = 0;
     /* USER CODE BEGIN WHILE */
@@ -227,10 +227,12 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
         // 软件触发ADC扫描，因为低贱的TIM10不支持直接硬件启动ADC
         // 只能在中断这里曲线救国了
         ADC1->CR2 |= ADC_CR2_SWSTART;
-    } else if (htim->Instance == TIM9) {
+    }
+    if (htim->Instance == TIM9) {
         // 突然发现TIM9是没有必要的，直接在TIM11更新poll就好了
         // 然后换用了uint16_t，应该是能正确处理回绕问题的
-    } else if (htim->Instance == TIM11) {
+    }
+    if (htim->Instance == TIM11) {
         // 更新PID响应
         g_motor->poll();
     }
@@ -241,8 +243,9 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc) {
         HAL_TIM_Base_Stop_IT(&htim10);
         if (g_mic_matrix) {
             g_mic_matrix->update(micros());
+            g_led_matrix->light_up(300);
             if (g_mic_matrix->is_ok()) {
-                auto ts = g_mic_matrix->get_timestamps();
+                // auto ts = g_mic_matrix->get_timestamps();
                 // auto loc = compute_position(MIC_LOCATIONS, ts);
                 auto loc = std::make_optional<std::pair<float, float>>(100.0f, 100.0f);
                 if (loc.has_value()) {
@@ -262,6 +265,7 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc) {
         }
         if (g_mic_matrix != nullptr) {
             HAL_ADC_Start_DMA(&hadc1, g_mic_matrix->dma_ptr(), 4);
+            // g_led_matrix->light_up(1200);
         }
         HAL_TIM_Base_Start_IT(&htim10);
     }
