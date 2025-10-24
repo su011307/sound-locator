@@ -107,10 +107,10 @@ int main(void) {
     HAL_Init();
 
     /* USER CODE BEGIN Init */
-    // DBGMCU->APB1FZ |= DBGMCU_APB1_FZ_DBG_TIM3_STOP;
-    // DBGMCU->APB2FZ |= DBGMCU_APB2_FZ_DBG_TIM9_STOP
-    //                 | DBGMCU_APB2_FZ_DBG_TIM10_STOP
-    //                 | DBGMCU_APB2_FZ_DBG_TIM11_STOP;
+    DBGMCU->APB1FZ |= DBGMCU_APB1_FZ_DBG_TIM3_STOP;
+    DBGMCU->APB2FZ |= DBGMCU_APB2_FZ_DBG_TIM9_STOP
+                    | DBGMCU_APB2_FZ_DBG_TIM10_STOP
+                    | DBGMCU_APB2_FZ_DBG_TIM11_STOP;
     /* USER CODE END Init */
 
     /* Configure the system clock */
@@ -141,7 +141,7 @@ int main(void) {
     static auto g_led_gpio_2 = new GPIO(GPIOA, GPIO_PIN_9);
     static auto g_led_gpio_3 = new GPIO(GPIOA, GPIO_PIN_10);
 
-    static I2CPort *g_i2cport = new I2CPort(&hi2c1);
+    static auto *g_i2cport = new I2CPort(&hi2c1);
 
     static auto g_encoder = new Encoder(&htim3);
     static auto g_pid_param = new PIDParams{
@@ -157,7 +157,6 @@ int main(void) {
     OLED_Clear();
     char str[] = "Hello";
     OLED_ShowString(1, 1, str);
-    g_motor->move_to(180);
 
     HAL_ADC_Start_DMA(&hadc1, g_mic_matrix->dma_ptr(), 4);
     // 在这里启动几个时钟
@@ -166,9 +165,7 @@ int main(void) {
     HAL_TIM_Base_Start_IT(&htim11);  // 定期调整电机
 
     /* USER CODE END 2 */
-    // HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0, GPIO_PIN_SET);
-    // __HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_2, 599);
-    // HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_2);
+
     /* Infinite loop */
     // int i = 0;
     /* USER CODE BEGIN WHILE */
@@ -246,11 +243,12 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc) {
             g_mic_matrix->update(micros());
             if (g_mic_matrix->is_ok()) {
                 auto ts = g_mic_matrix->get_timestamps();
-                auto loc = compute_position(MIC_LOCATIONS, ts);
+                // auto loc = compute_position(MIC_LOCATIONS, ts);
+                auto loc = std::make_optional<std::pair<float, float>>(100.0f, 100.0f);
                 if (loc.has_value()) {
                     auto f = loc.value().first, s = loc.value().second;
-                    auto d = sqrtf(f * f + s * s);
-                    auto str = "dist.: " + std::to_string(d); // 生成需要显示的字符串
+                    // auto d = sqrtf(f * f + s * s);
+                    // auto str = "dist.: " + std::to_string(d); // 生成需要显示的字符串
                     // g_oled->write(str);
 
                     // 计算角度

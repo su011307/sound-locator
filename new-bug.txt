@@ -1,0 +1,5 @@
+【现象】
+1. 注释掉HAL_TIM_PWM_STOP(motor.cpp: 136)，并在g_motor->poll(main.cpp: 235)上打断点，可以成功暂停
+2. 取消注释HAL_TIM_PWM_Stop(motor.cpp: 136)，则g_motor->poll无法暂停。说明HAL_TIM_PWM_Stop阻止了g_motor->poll的运行
+3. 在注释掉HAL_TIM_PWM_Stop的情况下，如果只有g_motor->poll一个断点，则可以正确进入暂停状态。但是如果再加上一个void HAL_ADC_ConvCpltCallback(main.cpp: 239)则每次暂停都是在ADC的回调函数出，代码似乎无法再抵达g_motor->poll。多次按下F9并每次求解表达式：__HAL_TIM_GET_COUNTER(&htim11)，均为0
+

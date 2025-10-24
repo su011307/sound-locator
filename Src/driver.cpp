@@ -3,13 +3,11 @@
 GPIO::GPIO(GPIO_TypeDef *port, uint16_t pin)
     : port_(port), pin_(pin) {}
 
-void GPIO::set_high()
-{
+void GPIO::set_high() const {
     HAL_GPIO_WritePin(port_, pin_, GPIO_PIN_SET);
 }
 
-void GPIO::set_low()
-{
+void GPIO::set_low() const {
     HAL_GPIO_WritePin(port_, pin_, GPIO_PIN_RESET);
 }
 
