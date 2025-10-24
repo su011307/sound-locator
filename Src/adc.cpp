@@ -62,7 +62,7 @@ void MX_ADC1_Init(void) {
 
     /** Configure for the selected ADC regular channel its corresponding rank in the sequencer and its sample time.
     */
-    sConfig.Channel = ADC_CHANNEL_0;
+    sConfig.Channel = ADC_CHANNEL_1;
     sConfig.Rank = 1;
     sConfig.SamplingTime = ADC_SAMPLETIME_15CYCLES;
     if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK) {
@@ -71,7 +71,7 @@ void MX_ADC1_Init(void) {
 
     /** Configure for the selected ADC regular channel its corresponding rank in the sequencer and its sample time.
     */
-    sConfig.Channel = ADC_CHANNEL_1;
+    sConfig.Channel = ADC_CHANNEL_2;
     sConfig.Rank = 2;
     if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK) {
         Error_Handler();
@@ -79,7 +79,7 @@ void MX_ADC1_Init(void) {
 
     /** Configure for the selected ADC regular channel its corresponding rank in the sequencer and its sample time.
     */
-    sConfig.Channel = ADC_CHANNEL_2;
+    sConfig.Channel = ADC_CHANNEL_0;
     sConfig.Rank = 3;
     if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK) {
         Error_Handler();

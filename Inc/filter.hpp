@@ -23,15 +23,15 @@ class CircleBuffer{
          * @param steps `size_t` 间隔的长度
          * @returns float 取得的数据
          */
-        float get_past(size_t steps) const;
+        [[nodiscard]] float get_past(size_t steps) const;
         // 返回当前缓冲区中的内容
-        std::vector<float> content() const;
+        [[nodiscard]] std::vector<float> content() const;
         // 返回缓冲区中已经写入的数据数量
-        size_t size() const;
+        [[nodiscard]] size_t size() const;
         // 返回缓冲区的最大容量
-        size_t capacity() const;
+        [[nodiscard]] size_t capacity() const;
         // 检查缓冲区是否被写满了
-        bool is_full() const;
+        [[nodiscard]] bool is_full() const;
 
     private:
         std::vector<float> buffer_;
@@ -48,7 +48,7 @@ class CircleBuffer{
  */
 class ZLEMAFilter{
     public:
-        ZLEMAFilter(size_t period);
+        explicit ZLEMAFilter(size_t period);
         /*
          * @brief 更新ZLEMA滤波器的值
          */
@@ -81,7 +81,7 @@ public:
      * @details 卡尔曼滤波分为两步，先预测，再修正。详情参阅下文注释
      */
     float update(float value);
-    float latest() const;
+    [[nodiscard]] float latest() const;
 
 private:
     float x_best_;  // 当前的最优估计

@@ -47,9 +47,9 @@ constexpr std::array<Point, 4> MIC_LOCATIONS =
 {
     {
         {4.0f, 4.0f},
+        {4.0f, -4.0f},
         {-4.0f, -4.0f},
-        {-4.0f, 4.0f},
-        {4.0f, -4.0f}
+        {-4.0f, 4.0f}
     }
 };
 /* USER CODE END PD */
@@ -66,7 +66,6 @@ MicrophoneMatrix *g_mic_matrix = nullptr;
 Motor *g_motor = nullptr;
 LEDMatrix *g_led_matrix = nullptr;
 Transmitter *g_trans = nullptr;
-static int i = 0;
 // OLED *g_oled = nullptr;
 /* USER CODE END PV */
 
@@ -146,7 +145,7 @@ int main(void) {
 
     static auto g_encoder = new Encoder(&htim3);
     static auto g_pid_param = new PIDParams{
-        15.0, 1.0, 1.0, 0.0, 0.0
+        15.0, 10.0, 1.0, 0.0, 0.0
     };
 
     g_motor = new Motor(&htim2, TIM_CHANNEL_2, g_enc_gpio_1, g_enc_gpio_2, g_encoder, g_pid_param);
@@ -244,8 +243,7 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc) {
             g_mic_matrix->update(micros());
             if (auto ok = g_mic_matrix->is_ok()) {
                 const auto ts = g_mic_matrix->get_timestamps();
-                const auto loc = compute_position(MIC_LOCATIONS, ts);
-                if (loc.has_value()) {
+                if (const auto loc = compute_position(MIC_LOCATIONS, ts); loc.has_value()) {
                     const auto f = loc.value().first;
                     const auto s = loc.value().second;
                     // auto d = sqrtf(f * f + s * s);

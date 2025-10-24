@@ -3,15 +3,15 @@
 LEDMatrix::LEDMatrix(GPIO *a0, GPIO *a1, GPIO *a2)
     : a0_(a0), a1_(a1), a2_(a2){ }
 
-void LEDMatrix::init(){
+void LEDMatrix::init() const {
     a0_->set_low();
     a1_->set_low();
     a2_->set_low();
 }
 
-void LEDMatrix::light_up(uint16_t degree){
-    init();
-    if (degree < 225 || degree >= 3375)
+void LEDMatrix::light_up(const uint16_t init_degree){
+    // init();
+    if (const auto degree = init_degree % 3600; degree < 225 || degree >= 3375)
     {
         // 位置处在第0个扇区覆盖范围内
     }
