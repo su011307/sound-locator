@@ -23,17 +23,17 @@ Motor::Motor(
     GPIO *ain2,
     Encoder *encoder,
     PIDParams *param)
-    : pwm_htim_(pwm_htim),
+    : is_moving_(false),
+      target_angle_(0.0f),
+      gear_ratio_(GEAR_RATIO),
+      pulses_per_round_(PULSES_PER_ROUND),
+      delta_(DELTA),
+      pwm_htim_(pwm_htim),
+      encoder_(encoder),
       pwm_channel_(pwm_channel),
       ain1_(ain1),
       ain2_(ain2),
-      encoder_(encoder),
-      param_(param),
-      target_angle_(0.0f),
-      is_moving_(false),
-      gear_ratio_(GEAR_RATIO),
-      pulses_per_round_(PULSES_PER_ROUND),
-      delta_(DELTA)
+      param_(param)
 {
     param->integral = 0.0f;
     param_->last_error = 0.0f;
@@ -89,7 +89,7 @@ void Motor::poll()
     }
 
     const auto current_cnt = static_cast<uint16_t>(encoder_->get_pulse_count());
-    const int16_t imp_delta = static_cast<int16_t>(current_cnt - last_pulse_cnt_);
+    const auto imp_delta = static_cast<int16_t>(current_cnt - last_pulse_cnt_);
     last_pulse_cnt_ = current_cnt;
     const float ang_delta = static_cast<float>(imp_delta) * 360.0f / (pulses_per_round_ * gear_ratio_);
 

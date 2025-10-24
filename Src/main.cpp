@@ -157,6 +157,7 @@ int main(void) {
     OLED_Clear();
     char str[] = "Hello";
     OLED_ShowString(1, 1, str);
+    g_motor->move_to(180);
 
     HAL_ADC_Start_DMA(&hadc1, g_mic_matrix->dma_ptr(), 4);
     // 在这里启动几个时钟
@@ -165,15 +166,16 @@ int main(void) {
     HAL_TIM_Base_Start_IT(&htim11);  // 定期调整电机
 
     /* USER CODE END 2 */
-    HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0, GPIO_PIN_SET);
-    __HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_2, 1998);
-    HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_2);
+    // HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0, GPIO_PIN_SET);
+    // __HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_2, 599);
+    // HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_2);
     /* Infinite loop */
+    // int i = 0;
     /* USER CODE BEGIN WHILE */
     while (1) {
         /* USER CODE END WHILE */
-
-
+        // g_led_matrix->light_up(224 + 450 * i);
+        // i = (i + 1) % 8;
         HAL_Delay(10);
         /* USER CODE BEGIN 3 */
     }
@@ -233,7 +235,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
         // 然后换用了uint16_t，应该是能正确处理回绕问题的
     } else if (htim->Instance == TIM11) {
         // 更新PID响应
-        // g_motor->poll();
+        g_motor->poll();
     }
 }
 

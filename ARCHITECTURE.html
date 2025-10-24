@@ -1,0 +1,195 @@
+<!DOCTYPE html><html><head>
+      <title>ARCHITECTURE</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      
+      <link rel="stylesheet" href="file:///c:\Users\24842\.vscode\extensions\shd101wyy.markdown-preview-enhanced-0.8.19\crossnote\dependencies\katex\katex.min.css">
+      
+      
+      <script type="text/javascript" src="file:///c:\Users\24842\.vscode\extensions\shd101wyy.markdown-preview-enhanced-0.8.19\crossnote\dependencies\mermaid\mermaid.min.js" charset="UTF-8"></script>
+      
+      
+      <style>
+      code[class*=language-],pre[class*=language-]{color:#333;background:0 0;font-family:Consolas,"Liberation Mono",Menlo,Courier,monospace;text-align:left;white-space:pre;word-spacing:normal;word-break:normal;word-wrap:normal;line-height:1.4;-moz-tab-size:8;-o-tab-size:8;tab-size:8;-webkit-hyphens:none;-moz-hyphens:none;-ms-hyphens:none;hyphens:none}pre[class*=language-]{padding:.8em;overflow:auto;border-radius:3px;background:#f5f5f5}:not(pre)>code[class*=language-]{padding:.1em;border-radius:.3em;white-space:normal;background:#f5f5f5}.token.blockquote,.token.comment{color:#969896}.token.cdata{color:#183691}.token.doctype,.token.macro.property,.token.punctuation,.token.variable{color:#333}.token.builtin,.token.important,.token.keyword,.token.operator,.token.rule{color:#a71d5d}.token.attr-value,.token.regex,.token.string,.token.url{color:#183691}.token.atrule,.token.boolean,.token.code,.token.command,.token.constant,.token.entity,.token.number,.token.property,.token.symbol{color:#0086b3}.token.prolog,.token.selector,.token.tag{color:#63a35c}.token.attr-name,.token.class,.token.class-name,.token.function,.token.id,.token.namespace,.token.pseudo-class,.token.pseudo-element,.token.url-reference .token.variable{color:#795da3}.token.entity{cursor:help}.token.title,.token.title .token.punctuation{font-weight:700;color:#1d3e81}.token.list{color:#ed6a43}.token.inserted{background-color:#eaffea;color:#55a532}.token.deleted{background-color:#ffecec;color:#bd2c00}.token.bold{font-weight:700}.token.italic{font-style:italic}.language-json .token.property{color:#183691}.language-markup .token.tag .token.punctuation{color:#333}.language-css .token.function,code.language-css{color:#0086b3}.language-yaml .token.atrule{color:#63a35c}code.language-yaml{color:#183691}.language-ruby .token.function{color:#333}.language-markdown .token.url{color:#795da3}.language-makefile .token.symbol{color:#795da3}.language-makefile .token.variable{color:#183691}.language-makefile .token.builtin{color:#0086b3}.language-bash .token.keyword{color:#0086b3}pre[data-line]{position:relative;padding:1em 0 1em 3em}pre[data-line] .line-highlight-wrapper{position:absolute;top:0;left:0;background-color:transparent;display:block;width:100%}pre[data-line] .line-highlight{position:absolute;left:0;right:0;padding:inherit 0;margin-top:1em;background:hsla(24,20%,50%,.08);background:linear-gradient(to right,hsla(24,20%,50%,.1) 70%,hsla(24,20%,50%,0));pointer-events:none;line-height:inherit;white-space:pre}pre[data-line] .line-highlight:before,pre[data-line] .line-highlight[data-end]:after{content:attr(data-start);position:absolute;top:.4em;left:.6em;min-width:1em;padding:0 .5em;background-color:hsla(24,20%,50%,.4);color:#f4f1ef;font:bold 65%/1.5 sans-serif;text-align:center;vertical-align:.3em;border-radius:999px;text-shadow:none;box-shadow:0 1px #fff}pre[data-line] .line-highlight[data-end]:after{content:attr(data-end);top:auto;bottom:.4em}html body{font-family:'Helvetica Neue',Helvetica,'Segoe UI',Arial,freesans,sans-serif;font-size:16px;line-height:1.6;color:#333;background-color:#fff;overflow:initial;box-sizing:border-box;word-wrap:break-word}html body>:first-child{margin-top:0}html body h1,html body h2,html body h3,html body h4,html body h5,html body h6{line-height:1.2;margin-top:1em;margin-bottom:16px;color:#000}html body h1{font-size:2.25em;font-weight:300;padding-bottom:.3em}html body h2{font-size:1.75em;font-weight:400;padding-bottom:.3em}html body h3{font-size:1.5em;font-weight:500}html body h4{font-size:1.25em;font-weight:600}html body h5{font-size:1.1em;font-weight:600}html body h6{font-size:1em;font-weight:600}html body h1,html body h2,html body h3,html body h4,html body h5{font-weight:600}html body h5{font-size:1em}html body h6{color:#5c5c5c}html body strong{color:#000}html body del{color:#5c5c5c}html body a:not([href]){color:inherit;text-decoration:none}html body a{color:#08c;text-decoration:none}html body a:hover{color:#00a3f5;text-decoration:none}html body img{max-width:100%}html body>p{margin-top:0;margin-bottom:16px;word-wrap:break-word}html body>ol,html body>ul{margin-bottom:16px}html body ol,html body ul{padding-left:2em}html body ol.no-list,html body ul.no-list{padding:0;list-style-type:none}html body ol ol,html body ol ul,html body ul ol,html body ul ul{margin-top:0;margin-bottom:0}html body li{margin-bottom:0}html body li.task-list-item{list-style:none}html body li>p{margin-top:0;margin-bottom:0}html body .task-list-item-checkbox{margin:0 .2em .25em -1.8em;vertical-align:middle}html body .task-list-item-checkbox:hover{cursor:pointer}html body blockquote{margin:16px 0;font-size:inherit;padding:0 15px;color:#5c5c5c;background-color:#f0f0f0;border-left:4px solid #d6d6d6}html body blockquote>:first-child{margin-top:0}html body blockquote>:last-child{margin-bottom:0}html body hr{height:4px;margin:32px 0;background-color:#d6d6d6;border:0 none}html body table{margin:10px 0 15px 0;border-collapse:collapse;border-spacing:0;display:block;width:100%;overflow:auto;word-break:normal;word-break:keep-all}html body table th{font-weight:700;color:#000}html body table td,html body table th{border:1px solid #d6d6d6;padding:6px 13px}html body dl{padding:0}html body dl dt{padding:0;margin-top:16px;font-size:1em;font-style:italic;font-weight:700}html body dl dd{padding:0 16px;margin-bottom:16px}html body code{font-family:Menlo,Monaco,Consolas,'Courier New',monospace;font-size:.85em;color:#000;background-color:#f0f0f0;border-radius:3px;padding:.2em 0}html body code::after,html body code::before{letter-spacing:-.2em;content:'\00a0'}html body pre>code{padding:0;margin:0;word-break:normal;white-space:pre;background:0 0;border:0}html body .highlight{margin-bottom:16px}html body .highlight pre,html body pre{padding:1em;overflow:auto;line-height:1.45;border:#d6d6d6;border-radius:3px}html body .highlight pre{margin-bottom:0;word-break:normal}html body pre code,html body pre tt{display:inline;max-width:initial;padding:0;margin:0;overflow:initial;line-height:inherit;word-wrap:normal;background-color:transparent;border:0}html body pre code:after,html body pre code:before,html body pre tt:after,html body pre tt:before{content:normal}html body blockquote,html body dl,html body ol,html body p,html body pre,html body ul{margin-top:0;margin-bottom:16px}html body kbd{color:#000;border:1px solid #d6d6d6;border-bottom:2px solid #c7c7c7;padding:2px 4px;background-color:#f0f0f0;border-radius:3px}@media print{html body{background-color:#fff}html body h1,html body h2,html body h3,html body h4,html body h5,html body h6{color:#000;page-break-after:avoid}html body blockquote{color:#5c5c5c}html body pre{page-break-inside:avoid}html body table{display:table}html body img{display:block;max-width:100%;max-height:100%}html body code,html body pre{word-wrap:break-word;white-space:pre}}.markdown-preview{width:100%;height:100%;box-sizing:border-box}.markdown-preview ul{list-style:disc}.markdown-preview ul ul{list-style:circle}.markdown-preview ul ul ul{list-style:square}.markdown-preview ol{list-style:decimal}.markdown-preview ol ol,.markdown-preview ul ol{list-style-type:lower-roman}.markdown-preview ol ol ol,.markdown-preview ol ul ol,.markdown-preview ul ol ol,.markdown-preview ul ul ol{list-style-type:lower-alpha}.markdown-preview .newpage,.markdown-preview .pagebreak{page-break-before:always}.markdown-preview pre.line-numbers{position:relative;padding-left:3.8em;counter-reset:linenumber}.markdown-preview pre.line-numbers>code{position:relative}.markdown-preview pre.line-numbers .line-numbers-rows{position:absolute;pointer-events:none;top:1em;font-size:100%;left:0;width:3em;letter-spacing:-1px;border-right:1px solid #999;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}.markdown-preview pre.line-numbers .line-numbers-rows>span{pointer-events:none;display:block;counter-increment:linenumber}.markdown-preview pre.line-numbers .line-numbers-rows>span:before{content:counter(linenumber);color:#999;display:block;padding-right:.8em;text-align:right}.markdown-preview .mathjax-exps .MathJax_Display{text-align:center!important}.markdown-preview:not([data-for=preview]) .code-chunk .code-chunk-btn-group{display:none}.markdown-preview:not([data-for=preview]) .code-chunk .status{display:none}.markdown-preview:not([data-for=preview]) .code-chunk .output-div{margin-bottom:16px}.markdown-preview .md-toc{padding:0}.markdown-preview .md-toc .md-toc-link-wrapper .md-toc-link{display:inline;padding:.25rem 0}.markdown-preview .md-toc .md-toc-link-wrapper .md-toc-link div,.markdown-preview .md-toc .md-toc-link-wrapper .md-toc-link p{display:inline}.markdown-preview .md-toc .md-toc-link-wrapper.highlighted .md-toc-link{font-weight:800}.scrollbar-style::-webkit-scrollbar{width:8px}.scrollbar-style::-webkit-scrollbar-track{border-radius:10px;background-color:transparent}.scrollbar-style::-webkit-scrollbar-thumb{border-radius:5px;background-color:rgba(150,150,150,.66);border:4px solid rgba(150,150,150,.66);background-clip:content-box}html body[for=html-export]:not([data-presentation-mode]){position:relative;width:100%;height:100%;top:0;left:0;margin:0;padding:0;overflow:auto}html body[for=html-export]:not([data-presentation-mode]) .markdown-preview{position:relative;top:0;min-height:100vh}@media screen and (min-width:914px){html body[for=html-export]:not([data-presentation-mode]) .markdown-preview{padding:2em calc(50% - 457px + 2em)}}@media screen and (max-width:914px){html body[for=html-export]:not([data-presentation-mode]) .markdown-preview{padding:2em}}@media screen and (max-width:450px){html body[for=html-export]:not([data-presentation-mode]) .markdown-preview{font-size:14px!important;padding:1em}}@media print{html body[for=html-export]:not([data-presentation-mode]) #sidebar-toc-btn{display:none}}html body[for=html-export]:not([data-presentation-mode]) #sidebar-toc-btn{position:fixed;bottom:8px;left:8px;font-size:28px;cursor:pointer;color:inherit;z-index:99;width:32px;text-align:center;opacity:.4}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] #sidebar-toc-btn{opacity:1}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc{position:fixed;top:0;left:0;width:300px;height:100%;padding:32px 0 48px 0;font-size:14px;box-shadow:0 0 4px rgba(150,150,150,.33);box-sizing:border-box;overflow:auto;background-color:inherit}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc::-webkit-scrollbar{width:8px}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc::-webkit-scrollbar-track{border-radius:10px;background-color:transparent}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc::-webkit-scrollbar-thumb{border-radius:5px;background-color:rgba(150,150,150,.66);border:4px solid rgba(150,150,150,.66);background-clip:content-box}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc a{text-decoration:none}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc .md-toc{padding:0 16px}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc .md-toc .md-toc-link-wrapper .md-toc-link{display:inline;padding:.25rem 0}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc .md-toc .md-toc-link-wrapper .md-toc-link div,html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc .md-toc .md-toc-link-wrapper .md-toc-link p{display:inline}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc .md-toc .md-toc-link-wrapper.highlighted .md-toc-link{font-weight:800}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .markdown-preview{left:300px;width:calc(100% - 300px);padding:2em calc(50% - 457px - 300px / 2);margin:0;box-sizing:border-box}@media screen and (max-width:1274px){html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .markdown-preview{padding:2em}}@media screen and (max-width:450px){html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .markdown-preview{width:100%}}html body[for=html-export]:not([data-presentation-mode]):not([html-show-sidebar-toc]) .markdown-preview{left:50%;transform:translateX(-50%)}html body[for=html-export]:not([data-presentation-mode]):not([html-show-sidebar-toc]) .md-sidebar-toc{display:none}
+/* Please visit the URL below for more information: */
+/*   https://shd101wyy.github.io/markdown-preview-enhanced/#/customize-css */
+
+      </style>
+      <!-- The content below will be included at the end of the <head> element. --><script type="text/javascript">
+  document.addEventListener("DOMContentLoaded", function () {
+    // your code here
+  });
+</script></head><body for="html-export">
+    
+    
+      <div class="crossnote markdown-preview  ">
+      
+<h1 id="摘要">摘要 </h1>
+<h2 id="功能定位">功能定位 </h2>
+<p>通过4个麦克风阵列采集声源，到达时间差 (TDoA) 解算空间位置，并驱动电机、LED环、OLED完成反馈。</p>
+<h2 id="主要特性">主要特性 </h2>
+<ul>
+<li>DMA连续采样</li>
+<li>基于中断触发的流程</li>
+<li>硬件加速（基于CMSIS-DSP）的矩阵运算</li>
+<li>高性能滤波器降噪</li>
+<li>PID电机控制</li>
+</ul>
+<div class="mermaid">flowchart TD
+    boot[上电/Reset] --&gt; init[&lt;b&gt;全局初始化&lt;/b&gt;&lt;br&gt;HAL_Init + SystemClock_Config]
+    init --&gt; mx[&lt;b&gt;初始化外设&lt;/b&gt;&lt;br&gt;MX_GPIO/ADC/DMA/TIM/I2C/UART 初始化]
+    mx --&gt; objects[&lt;b&gt;创建抽象对象&lt;/b&gt;&lt;br&gt;构造 MicrophoneMatrix、Motor、LEDMatrix、Transmitter]
+    objects --&gt; start[&lt;b&gt;启动对应&lt;/b&gt;&lt;br&gt;启动ADC/DMA + TIM9/10/11 + PWM]
+    start --&gt; loop[主循环 10ms 心跳]
+    tim10[&lt;b&gt;Mainloop起点&lt;/b&gt;&lt;br&gt;TIM10 周期中断&lt;br/&gt;软件触发 ADC] -.-&gt; dma[ADC DMA 完成回调]
+    dma --&gt; filter[MicrophoneMatrix::update&lt;br/&gt;ZLEMA 去噪+阈值判定]
+    filter --&gt; tdoa[TDoA compute_position&lt;br/&gt;CMSIS-DSP 矩阵运算]
+    tdoa --&gt; act[Motor.move_to&lt;br/&gt;LEDMatrix.light_up&lt;br/&gt;OLED输出]
+    act --&gt; loop
+</div><h2 id="模块组织结构">模块组织结构 </h2>
+<div class="mermaid">graph TD
+    A[应用层入口&lt;br/&gt;Core/Src/main.cpp] --&gt; B[声学采集层&lt;br/&gt;mic.* + filter.*]
+    A --&gt; C[定位算法层&lt;br/&gt;tdoa.cpp + utils.*]
+    A --&gt; D[执行与反馈层&lt;br/&gt;motor.* + led.* + usart.* + OLED*]
+    B --&gt; E[硬件抽象层&lt;br/&gt;driver.* + MX_ADC/DMA/TIM/GPIO/I2C/USART]
+    C --&gt; E
+    D --&gt; E
+    E --&gt; F[底层库&lt;br/&gt;CMSIS-DSP + HAL + Startup]
+</div><h2 id="完成度自评">完成度自评 </h2>
+<p>软件总体完成度良好，但是由于时间限制，没能实现GCC算法（GCC-ML）来进一步提高相位差计算时的精度</p>
+<hr>
+<h1 id="软件设计">软件设计 </h1>
+<h2 id="核心模块说明">核心模块说明 </h2>
+<h3 id="主控与系统初始化">主控与系统初始化 </h3>
+<ul>
+<li><code>Core/Src/main.cpp</code> 负责系统启动、全局对象创建以及外设初始化。</li>
+<li>注册 <code>HAL_ADC_ConvCpltCallback</code> 处理完整 DMA 周期：读取 ADC 缓冲、更新麦克风状态、调用 TDOA 求解、触发电机与可视化输出。</li>
+<li>定时器职责：TIM10软件触发ADC、TIM11预留给PID调度、TIM9读取编码器。</li>
+</ul>
+<h3 id="声源采集与预处理">声源采集与预处理 </h3>
+<ul>
+<li><code>mic.hpp/cpp</code> 管理4通道ADC缓冲，结合 <code>ZLEMAFilter</code> 去噪并根据阈值窗口筛选有效波形，支持 Single/Random/Measure/Continuous 模式切换和趋势判定。</li>
+<li><code>filter.hpp/cpp</code> 提供环形缓冲、ZLEMA、标量Kalman滤波器，用于降噪和迟滞补偿。</li>
+<li>DMA (<code>Core/Src/dma.cpp</code>, <code>adc.cpp</code>) 以扫描模式采样4路模拟输入，减少CPU干预。</li>
+</ul>
+<h3 id="执行与反馈">执行与反馈 </h3>
+<ul>
+<li><code>motor.hpp/cpp</code> 封装TB6612电机驱动，结合编码器反馈与PID控制角度，支持向目标角度运动与PWM控制。</li>
+<li><code>led.hpp/cpp</code> 控制LED环扇区点亮，映射到8段显示。</li>
+<li><code>OLED.c/h</code> 与 <code>I2CPort</code> 结合在I2C上发送命令和数据，为测距/状态输出提供文本界面。</li>
+<li><code>usart.hpp/cpp</code> 封装UART6发送，<code>Transmitter::send</code> 用于获取麦克风的原始输出，计算电气特性并估算卡尔曼滤波的协方差矩阵等先验数据</li>
+</ul>
+<h3 id="底层驱动与封装">底层驱动与封装 </h3>
+<ul>
+<li><code>driver.hpp/cpp</code> 对 GPIO、定时器等 HAL 句柄进行轻量 C++ 封装，增强类型安全与可读性。</li>
+<li><code>tim.cpp</code>, <code>gpio.cpp</code>, <code>i2c.cpp</code>, <code>usart.cpp</code>, <code>stm32f4xx_it.cpp</code> 等由 CubeMX 生成，负责具体外设初始化、中断向量与 MSP 配置。</li>
+<li><code>attached_lib/</code>, <code>Startup/</code> 以及 <code>Drivers/</code> 是来自江协科技的OLED驱动库</li>
+</ul>
+<h1 id="算法">算法 </h1>
+<h2 id="tdoa-定位算法">TDOA 定位算法 </h2>
+<p>主要参考资料：<a href="https://www.bing.com/search?pc=MOZI&amp;form=MOZLBR&amp;q=%E6%97%B6%E9%97%B4%E5%B7%AE+%E5%AE%9A%E4%BD%8D">https://www.bing.com/search?pc=MOZI&amp;form=MOZLBR&amp;q=时间差+定位</a></p>
+<h3 id="概述">概述 </h3>
+<ul>
+<li><code>tdoa.cpp</code> 基于Chan解算的二维定位流程，使用<code>utils.cpp</code>中的矩阵封装与 CMSIS-DSP（<code>arm_mat_*</code>，<code>arm_sqrt_f32</code>等）完成代数运算，输出声源平面坐标。</li>
+<li><code>utils.hpp/cpp</code> 统一矩阵操作、向量封装以及朴素距离求解等工具函数。</li>
+<li>使用了<code>std::optional&lt;T&gt;</code>等来处理除零的问题。我承认有点Rust的惯性在里面</li>
+</ul>
+<h3 id="历程">历程 </h3>
+<div class="mermaid">graph TD
+    1[回声定位] --？--&gt; 2_1[利用声强和距离呈平方反比？（噪声过大，&lt;b&gt;否决&lt;/b&gt;）]
+    1 --？--&gt; 2_2[利用到达时间差] --&gt; 3[必应搜索“时间差 定位”] --&gt; 4[确认使用TDoA] --&gt; 5[必应搜索“TDoA”，进一步深入了解] --&gt; 6[确认使用Chan氏反结算]
+</div><h2 id="pid算法">PID算法 </h2>
+<h3 id="概述-1">概述 </h3>
+<p>PID算法的实现在<code>Motor::poll()</code>中。作为最著名的控制算法之一，PID的伟大毋须多言，必须给到夯。我选用的是离散化的版本</p>
+<p><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mtext>Output</mtext><mo>=</mo><msub><mi>K</mi><mi>p</mi></msub><mo>⋅</mo><mi>e</mi><mo stretchy="false">(</mo><mi>k</mi><mo stretchy="false">)</mo><mo>+</mo><msub><mi>K</mi><mi>i</mi></msub><mo>⋅</mo><mstyle scriptlevel="0" displaystyle="true"><munderover><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><mn>0</mn></mrow><mi>k</mi></munderover><mrow><mi>e</mi><mo stretchy="false">(</mo><mi>i</mi><mo stretchy="false">)</mo><mi mathvariant="normal">Δ</mi><mi>t</mi></mrow><mo>+</mo><msub><mi>K</mi><mi>d</mi></msub><mo>⋅</mo><mfrac><mrow><mi>e</mi><mo stretchy="false">(</mo><mi>k</mi><mo stretchy="false">)</mo><mo>−</mo><mi>e</mi><mo stretchy="false">(</mo><mi>k</mi><mo>−</mo><mn>1</mn><mo stretchy="false">)</mo></mrow><mrow><mi mathvariant="normal">Δ</mi><mi>t</mi></mrow></mfrac></mstyle></mrow><annotation encoding="application/x-tex">\text{Output} = K_p \cdot e(k) + K_i \cdot\displaystyle\sum_{i = 0}^{k}{e(i)\Delta t} + K_d \cdot \dfrac{e(k) - e(k-1)}{\Delta t}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8778em;vertical-align:-0.1944em;"></span><span class="mord text"><span class="mord">Output</span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.9694em;vertical-align:-0.2861em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.07153em;">K</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:-0.0715em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">p</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">⋅</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">e</span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.03148em;">k</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.07153em;">K</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.0715em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">⋅</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:3.1138em;vertical-align:-1.2777em;"></span><span class="mop op-limits"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.8361em;"><span style="top:-1.8723em;margin-left:0em;"><span class="pstrut" style="height:3.05em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">i</span><span class="mrel mtight">=</span><span class="mord mtight">0</span></span></span></span><span style="top:-3.05em;"><span class="pstrut" style="height:3.05em;"></span><span><span class="mop op-symbol large-op">∑</span></span></span><span style="top:-4.3em;margin-left:0em;"><span class="pstrut" style="height:3.05em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.03148em;">k</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.2777em;"><span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal">e</span><span class="mopen">(</span><span class="mord mathnormal">i</span><span class="mclose">)</span><span class="mord">Δ</span><span class="mord mathnormal">t</span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.07153em;">K</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.0715em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">d</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">⋅</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:2.113em;vertical-align:-0.686em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.427em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">Δ</span><span class="mord mathnormal">t</span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal">e</span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.03148em;">k</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord mathnormal">e</span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.03148em;">k</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord">1</span><span class="mclose">)</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.686em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span></span></p>
+<p>同时在软件层面对积分项的上限做了限制，防止在连续追踪的过程中出现积分项值过大的情况</p>
+<hr>
+<h1 id="困难与挑战">困难与挑战 </h1>
+<h2 id="底层细节">底层细节 </h2>
+<h3 id="描述">描述 </h3>
+<p>STM32的开发会涉及到非常多底层的细节，在编写外设代码的时候会带来很重的心智负担</p>
+<h3 id="解决方案">解决方案 </h3>
+<p>用面向对象的思路，构建出外设的鸭子对象。减轻调用时的心智负担，降低出错风险</p>
+<hr>
+<h2 id="滤波器">滤波器 </h2>
+<h3 id="描述-1">描述 </h3>
+<p>卡尔曼滤波器非常困难，原理难以理解</p>
+<h3 id="解决方案-1">解决方案 </h3>
+<p>利用Gemini辅助学习卡尔曼滤波的思想，了解运行原理。并独立写出标量线性卡尔曼滤波的实现</p>
+<hr>
+<h2 id="初始化时钟debug">初始化时钟（Debug） </h2>
+<h3 id="错误1">错误（1） </h3>
+<p><strong>描述</strong>：I2C无法正常通过硬件传输数据<br>
+<strong>错误堆栈</strong></p>
+<div class="mermaid">graph LR
+    main(main) --&gt; Init(Init) --&gt; Init_OLED(Init_OLED) --&gt; OLED_Init(OLED_Init) --&gt; OLED_WriteCommand(OLED_WriteCommand) --&gt; HAL_I2C_Mem_Write(HAL_I2C_Mem_Write) --&gt; I2C_WaitOnFlagUntilTimeout(I2C_WaitOnFlagUntilTimeout（死循环）)
+</div><h3 id="错误2">错误（2） </h3>
+<p><strong>描述</strong>：LED可以点亮，但是不能跑马灯<br>
+<strong>推理逻辑</strong></p>
+<div class="mermaid">graph LR
+    led[跑马灯] --&gt; 1[无法正常切换] --&gt; 2[HAL_Delay没有发挥作用] --"？"--&gt; 2_1[跑马灯逻辑有问题（&lt;b&gt;否决&lt;/b&gt;）] 
+    2 --"？"--&gt; 2_2[HAL函数有Bug（&lt;b&gt;华丽地否决&lt;/b&gt;）]
+    2 --"！"--&gt; 2_3[时钟配置出现问题] 
+    2_3 --&gt; 3[排查时钟错误]
+</div><p>在排查时钟错误的时候，使用了ChatGPT了解STM32中HAL_Delay更底层的工作原理，了解到下面的依赖链条：</p>
+<div class="mermaid">graph LR
+    1[uwTick] --&gt; 2[SysTick中断] --&gt; 2m[中断向量表注册] --&gt; 3[HAL_IncTick] --&gt; 4[SysTick_Handler（缺失）]
+</div><p>经过排查，确认遗失<code>SysTick_Handler()</code>以及后续全部调用链，导致所有依赖于<code>uwTick</code>的HAL函数失效</p>
+<h3 id="解决方案-2">解决方案 </h3>
+<p>利用CubeMX重构项目，解决了时钟和其它基础设施初始化问题</p>
+<hr>
+<h2 id="cmsis-dsp不可用">CMSIS-DSP不可用 </h2>
+<h3 id="描述-2">描述 </h3>
+<p>做native单元测试的时候发现我的计算机（x86-64）不能使用CMSIS-DSP（ARM）库</p>
+<h3 id="解决方案-3">解决方案 </h3>
+<p>使用C标准库在x86-64下重写使用到的CMSIS-DSP库函数，并保持接口一致</p>
+<h1 id="趣事一则">趣事一则 </h1>
+<p>我面对的并非总是技术问题，有时候还要处理和别的小组的关系。我同学的组员向我求助电机的控制算法、TDoA算法和滤波器算法。我不得不在“帮”和“不帮”之间作出选择。不过考虑到我们首先是将要同窗四年的同学，其次才是在这场比赛中的竞争对手，为了一时的利益而放弃同学情谊，多少有些得不偿失。所以我无偿、无保留地向他提供了全部的电机控制算法实现、各种IIR滤波器及其变体的实现（虽然是Rust的）以及Chan反解算的指导。PS，其实当时也有一个原因——我相信哪怕向他们提供了帮助，我们组依旧有足够的竞争力，也算是对小组自身实力的一种认同和自信吧</p>
+
+      </div>
+      
+      
+    
+    
+    <script type="module">
+// TODO: If ZenUML gets integrated into mermaid in the future,
+//      we can remove the following lines.
+
+
+var MERMAID_CONFIG = ({"startOnLoad":false});
+if (typeof MERMAID_CONFIG !== 'undefined') {
+  MERMAID_CONFIG.startOnLoad = false
+  MERMAID_CONFIG.cloneCssStyles = false
+  MERMAID_CONFIG.theme = "default"
+}
+
+mermaid.initialize(MERMAID_CONFIG || {})
+if (typeof(window['Reveal']) !== 'undefined') {
+  function mermaidRevealHelper(event) {
+    var currentSlide = event.currentSlide
+    var diagrams = currentSlide.querySelectorAll('.mermaid')
+    for (var i = 0; i < diagrams.length; i++) {
+      var diagram = diagrams[i]
+      if (!diagram.hasAttribute('data-processed')) {
+        mermaid.init(null, diagram, ()=> {
+          Reveal.slide(event.indexh, event.indexv)
+        })
+      }
+    }
+  }
+  Reveal.addEventListener('slidetransitionend', mermaidRevealHelper)
+  Reveal.addEventListener('ready', mermaidRevealHelper)
+  await mermaid.run({
+    nodes: document.querySelectorAll('.mermaid')
+  })
+} else {
+  await mermaid.run({
+    nodes: document.querySelectorAll('.mermaid')
+  })
+}
+</script>
+    
+    
+    
+  
+    </body></html>

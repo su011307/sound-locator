@@ -8,7 +8,7 @@
 constexpr uint8_t GEAR_RATIO = 34;         // 减速比
 constexpr uint16_t PULSES_PER_ROUND = 500; // 电机每转一圈产生的脉冲数
 constexpr float STOP_THRESHOLD_ANGLE = 1.0f;
-constexpr uint32_t DELTA = 100 * 1000; // 时间间隔，单位：us
+constexpr uint32_t DELTA = 235; // 时间间隔，单位：us
 constexpr uint32_t MAX_PWM = 1999;     // PWM的最大值
 
 /*
