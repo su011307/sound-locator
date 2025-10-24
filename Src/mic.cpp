@@ -2,7 +2,8 @@
 
 MicrophoneMatrix::MicrophoneMatrix() : mic_buffer_{}, timestamp_records_{},
                                        last_value_({TRIGGER_THRESH, TRIGGER_THRESH, TRIGGER_THRESH, TRIGGER_THRESH}),
-                                       last_direction_(true) {
+                                       last_direction_(true),
+                                       mode_(WorkingMode::Single) {
     for (int i = 0; i < 4; i++) {
         filters_[i] = std::make_unique<ZLEMAFilter>(FILTER_PERIOD);
     }

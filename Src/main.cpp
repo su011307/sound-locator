@@ -46,10 +46,10 @@
 constexpr std::array<Point, 4> MIC_LOCATIONS =
 {
     {
-        {4.5f, 4.5f},
-        {4.5f, -4.5f},
-        {-4.5f, 4.5f},
-        {-4.5f, -4.5f}
+        {4.0f, 4.0f},
+        {-4.0f, -4.0f},
+        {-4.0f, 4.0f},
+        {4.0f, -4.0f}
     }
 };
 /* USER CODE END PD */
@@ -66,6 +66,7 @@ MicrophoneMatrix *g_mic_matrix = nullptr;
 Motor *g_motor = nullptr;
 LEDMatrix *g_led_matrix = nullptr;
 Transmitter *g_trans = nullptr;
+static int i = 0;
 // OLED *g_oled = nullptr;
 /* USER CODE END PV */
 
@@ -107,9 +108,9 @@ int main(void) {
     HAL_Init();
 
     /* USER CODE BEGIN Init */
-    DBGMCU->APB1FZ |= DBGMCU_APB1_FZ_DBG_TIM3_STOP;
-    DBGMCU->APB2FZ |= DBGMCU_APB2_FZ_DBG_TIM9_STOP
-                    | DBGMCU_APB2_FZ_DBG_TIM10_STOP;
+    // DBGMCU->APB1FZ |= DBGMCU_APB1_FZ_DBG_TIM3_STOP;
+    // DBGMCU->APB2FZ |= DBGMCU_APB2_FZ_DBG_TIM9_STOP
+    //                 | DBGMCU_APB2_FZ_DBG_TIM10_STOP;
                     // | DBGMCU_APB2_FZ_DBG_TIM11_STOP;
     /* USER CODE END Init */
 
@@ -160,19 +161,17 @@ int main(void) {
 
     HAL_ADC_Start_DMA(&hadc1, g_mic_matrix->dma_ptr(), 4);
     // 在这里启动几个时钟
-    // HAL_TIM_Base_Start_IT(&htim9);  // 定期读取编码器度数
+    // HAL_TIM_Base_Start_IT(&htim9);  // 定期读取编码器度数。这个计时器已经被弃用了
     HAL_TIM_Base_Start_IT(&htim10);  // 定期触发ADC
     HAL_TIM_Base_Start_IT(&htim11);  // 定期调整电机
 
     /* USER CODE END 2 */
-    // g_motor->move_to(180);
+
     /* Infinite loop */
-    // int i = 0;
+
     /* USER CODE BEGIN WHILE */
     while (1) {
         /* USER CODE END WHILE */
-        // g_led_matrix->light_up(224 + 450 * i);
-        // i = (i + 1) % 8;
         HAL_Delay(10);
         /* USER CODE BEGIN 3 */
     }
@@ -243,20 +242,19 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc) {
         HAL_TIM_Base_Stop_IT(&htim10);
         if (g_mic_matrix) {
             g_mic_matrix->update(micros());
-            g_led_matrix->light_up(300);
-            if (g_mic_matrix->is_ok()) {
-                // auto ts = g_mic_matrix->get_timestamps();
-                // auto loc = compute_position(MIC_LOCATIONS, ts);
-                auto loc = std::make_optional<std::pair<float, float>>(100.0f, 100.0f);
+            if (auto ok = g_mic_matrix->is_ok()) {
+                const auto ts = g_mic_matrix->get_timestamps();
+                const auto loc = compute_position(MIC_LOCATIONS, ts);
                 if (loc.has_value()) {
-                    auto f = loc.value().first, s = loc.value().second;
+                    const auto f = loc.value().first;
+                    const auto s = loc.value().second;
                     // auto d = sqrtf(f * f + s * s);
                     // auto str = "dist.: " + std::to_string(d); // 生成需要显示的字符串
                     // g_oled->write(str);
 
                     // 计算角度
                     auto angle = atan2(loc.value().second, loc.value().first) * 57.29578; // 换算成度
-
+                    g_led_matrix->light_up(angle);
                     g_motor->move_to(angle);
                 } else {
                     // g_oled->write("?");
@@ -265,16 +263,16 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc) {
         }
         if (g_mic_matrix != nullptr) {
             HAL_ADC_Start_DMA(&hadc1, g_mic_matrix->dma_ptr(), 4);
-            // g_led_matrix->light_up(1200);
         }
         HAL_TIM_Base_Start_IT(&htim10);
     }
 }
 
-void HAL_EXTI_GPIO_IRQHandler(uint16_t GPIO_Pin) {
+void HAL_EXTI_GPIO_IRQHandler(const uint16_t GPIO_Pin) {
     if (GPIO_Pin == GPIO_PIN_13) {
-        HAL_Delay(20);
         g_mic_matrix->switch_mode();
+        // i = (i + 1) % 8;
+        // g_led_matrix->light_up(0 + i * 450);
     }
 }
 

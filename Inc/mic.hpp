@@ -8,7 +8,7 @@
 #include "filter.hpp"
 
 constexpr uint32_t ADC_SAMPLING_SPAN = 1000; // 麦克风矩阵ADC采样的间隔，单位：us
-constexpr uint8_t FILTER_PERIOD = 14;        // ZLEMA的周期
+constexpr uint8_t FILTER_PERIOD = 4;        // ZLEMA的周期
 constexpr uint32_t TRIGGER_THRESH = 1024;    // 触发阈值
 constexpr uint32_t BUFFER = 24; // 留一个中间地带，防止去噪不彻底的抖动
 constexpr uint32_t WINDOW = 600; 
@@ -29,14 +29,12 @@ class MicrophoneMatrix
 public:
     MicrophoneMatrix();
     uint32_t *dma_ptr() {return mic_buffer_.data();}
-    bool is_ok() const;
+    [[nodiscard]] bool is_ok() const;
     void switch_mode();
     void update(uint32_t timestamp);
-    std::array<uint32_t, 4> get_timestamps() const;
+    [[nodiscard]] std::array<uint32_t, 4> get_timestamps() const;
 
 private:
-    WorkingMode mode_ = WorkingMode::Single;
-
     std::optional<uint32_t> gate_open_time_;
     std::optional<bool> gate_direction_; // true为上穿窗口，false为下穿窗口
     std::optional<bool> last_direction_; // 最近一次有效触发方向
